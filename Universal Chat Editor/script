@@ -1,0 +1,372 @@
+local TextChat = game:GetService("TextChatService")
+local WindowConfig = TextChat.ChatWindowConfiguration
+local InputBarConfig = TextChat.ChatInputBarConfiguration
+local BubbleConfig = TextChat.BubbleChatConfiguration
+
+local OrionLib = loadstring(game:HttpGet(('https://pastebin.com/raw/WRUyYTdY')))()
+local Window = OrionLib:MakeWindow({Name = "Universal Chat Edit v0.0.2", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+
+--|| CHAT WINDOW CONFIGS ||--
+
+
+local ChatWindow = Window:MakeTab({
+	Name = "Chat Window",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+ChatWindow:AddParagraph("v0.0.2","library was fixed for mobile! enjoy! by C0huZz")
+
+ChatWindow:AddToggle({
+	Name = "Enabled",
+	Default = true,
+	Callback = function(Value)
+      	WindowConfig.Enabled = Value
+	end    
+})
+
+ChatWindow:AddColorpicker({
+	Name = "Background Color3",
+	Default = Color3.fromRGB(25, 27, 29),
+	Callback = function(Value)
+		WindowConfig.BackgroundColor3 = Value
+	end	  
+})
+
+ChatWindow:AddSlider({
+	Name = "Background Transparency",
+	Min = 0,
+	Max = 1,
+	Default = 0.3,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 0.1,
+	ValueName = "transparency",
+	Callback = function(Value)
+		WindowConfig.BackgroundTransparency = Value
+	end    
+})
+
+ChatWindow:AddColorpicker({
+	Name = "Text Color3",
+	Default = Color3.fromRGB(255, 255, 255),
+	Callback = function(Value)
+		WindowConfig.TextColor3 = Value
+	end	  
+})
+
+ChatWindow:AddSlider({
+	Name = "Text Size",
+	Min = 1,
+	Max = 100,
+	Default = 14,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "text size",
+	Callback = function(Value)
+		WindowConfig.TextSize = Value
+	end    
+})
+
+ChatWindow:AddColorpicker({
+	Name = "Text Stroke Color3",
+	Default = Color3.fromRGB(0, 0, 0),
+	Callback = function(Value)
+		WindowConfig.TextStrokeColor3 = Value
+	end	  
+})
+
+ChatWindow:AddSlider({
+	Name = "Text Stroke Transparency",
+	Min = 0,
+	Max = 1,
+	Default = 0.5,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 0.1,
+	ValueName = "text transparency",
+	Callback = function(Value)
+		WindowConfig.TextStrokeTransparency = Value
+	end    
+})
+
+ChatWindow:AddDropdown({
+	Name = "Horizontal Alignment",
+	Default = "Left",
+	Options = {"Left", "Center", "Right"},
+	Callback = function(Value)
+		WindowConfig.HorizontalAlignment = Enum.HorizontalAlignment[Value]
+	end    
+})
+
+ChatWindow:AddDropdown({
+	Name = "Vertical Alignment",
+	Default = "Bottom",
+	Options = {"Bottom", "Center", "Top"},
+	Callback = function(Value)
+		WindowConfig.VerticalAlignment = Enum.VerticalAlignment[Value]
+	end    
+})
+
+--|| CHAT INPUT BAR CONFIGS ||--
+
+local ChatInputBar = Window:MakeTab({
+	Name = "Chat Input Bar",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+
+ChatInputBar:AddToggle({
+	Name = "Enabled",
+	Default = true,
+	Callback = function(Value)
+      	InputBarConfig.Enabled = Value
+	end    
+})
+
+ChatInputBar:AddColorpicker({
+	Name = "Background Color3",
+	Default = Color3.fromRGB(25, 27, 29),
+	Callback = function(Value)
+		InputBarConfig.BackgroundColor3 = Value
+	end	  
+})
+
+ChatInputBar:AddSlider({
+	Name = "Background Transparency",
+	Min = 0,
+	Max = 1,
+	Default = 0.3,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 0.1,
+	ValueName = "transparency",
+	Callback = function(Value)
+		InputBarConfig.BackgroundTransparency = Value
+	end    
+})
+
+ChatInputBar:AddColorpicker({
+	Name = "Text Color3",
+	Default = Color3.fromRGB(255, 255, 255),
+	Callback = function(Value)
+		InputBarConfig.TextColor3 = Value
+	end	  
+})
+
+ChatInputBar:AddSlider({
+	Name = "Text Size",
+	Min = 1,
+	Max = 100,
+	Default = 14,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "text size",
+	Callback = function(Value)
+		InputBarConfig.TextSize = Value
+	end    
+})
+
+ChatInputBar:AddColorpicker({
+	Name = "Text Stroke Color3",
+	Default = Color3.fromRGB(0, 0, 0),
+	Callback = function(Value)
+		InputBarConfig.TextStrokeColor3 = Value
+	end	  
+})
+
+ChatInputBar:AddSlider({
+	Name = "Text Stroke Transparency",
+	Min = 0,
+	Max = 1,
+	Default = 0.5,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 0.1,
+	ValueName = "text transparency",
+	Callback = function(Value)
+		InputBarConfig.TextStrokeTransparency = Value
+	end    
+})
+
+ChatInputBar:AddTextbox({
+	Name = "KeyBind to focus",
+	Default = "Slash",
+	TextDisappear = true,
+	Callback = function(Value)
+		InputBarConfig.KeyboardKeyCode = Enum.KeyCode[Value]
+	end	  
+})
+ChatInputBar:AddParagraph("KeyBind","Full name, not symbol")
+
+local Value_ACE = true
+ChatInputBar:AddButton({
+	Name = "Autocomplere Enabled",
+	Callback = function()
+      	InputBarConfig.AutocomplereEnabled = Value_ACE
+  	end    
+})
+
+ChatInputBar:AddTextbox({
+	Name = "Text Box",
+	Default = "",
+	TextDisappear = true,
+	Callback = function(Value)
+		InputBarConfig.TextBox = Value
+	end	  
+})
+ChatInputBar:AddParagraph("TextBox","Full name of TextBox, like: 'workspace.Part'")
+ChatInputBar:AddParagraph("TargetTextChannel","TargetTextChannel comming soon!")
+
+--|| BUBBLE CHAT CONFIGS ||--
+
+local BubbleWindow = Window:MakeTab({
+	Name = "Bubble Window",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+BubbleWindow:AddToggle({
+	Name = "Enabled",
+	Default = true,
+	Callback = function(Value)
+      	BubbleConfig.Enabled = Value
+	end    
+})
+ 
+BubbleWindow:AddColorpicker({
+	Name = "Background Color3",
+	Default = Color3.fromRGB(25, 27, 29),
+	Callback = function(Value)
+		BubbleConfig.BackgroundColor3 = Value
+	end	  
+})
+ 
+BubbleWindow:AddSlider({
+	Name = "Background Transparency",
+	Min = 0,
+	Max = 1,
+	Default = 0.3,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 0.1,
+	ValueName = "transparency",
+	Callback = function(Value)
+		BubbleConfig.BackgroundTransparency = Value
+	end    
+})
+ 
+BubbleWindow:AddColorpicker({
+	Name = "Text Color3",
+	Default = Color3.fromRGB(255, 255, 255),
+	Callback = function(Value)
+		BubbleConfig.TextColor3 = Value
+	end	  
+})
+ 
+BubbleWindow:AddSlider({
+	Name = "Text Size",
+	Min = 1,
+	Max = 100,
+	Default = 14,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "text size",
+	Callback = function(Value)
+		BubbleConfig.TextSize = Value
+	end    
+})
+
+BubbleWindow:AddSlider({
+	Name = "Bubble Duration",
+	Min = 1,
+	Max = 600,
+	Default = 1,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "duration",
+	Callback = function(Value)
+		BubbleConfig.BubbleDuration = Value
+	end    
+})
+
+BubbleWindow:AddSlider({
+	Name = "Bubble Spacing",
+	Min = 1,
+	Max = 50,
+	Default = 6,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "space",
+	Callback = function(Value)
+		BubbleConfig.BubbleDuration = Value
+	end    
+})
+
+BubbleWindow:AddSlider({
+	Name = "Max Bubbles",
+	Min = 1,
+	Max = 6,
+	Default = 3,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "max",
+	Callback = function(Value)
+		BubbleConfig.MaxBubbles = Value
+	end    
+})
+
+BubbleWindow:AddSlider({
+	Name = "Max Distance",
+	Min = 1,
+	Max = 1000,
+	Default = 1,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "distance",
+	Callback = function(Value)
+		BubbleConfig.MaxDistance = Value
+	end    
+})
+
+BubbleWindow:AddSlider({
+	Name = "Minimize Distance",
+	Min = 1,
+	Max = 100,
+	Default = 1,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "minimize dist",
+	Callback = function(Value)
+		BubbleConfig.MinimizeDistance = Value
+	end    
+})
+
+BubbleWindow:AddParagraph("Minimize", "This is how much stoods is distance to make text '...'")
+
+BubbleWindow:AddSlider({
+	Name = "Vertical Studs Offset",
+	Min = 0,
+	Max = 100,
+	Default = 0,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "vertical offset",
+	Callback = function(Value)
+		BubbleConfig.VerticalStudsOffset = Value
+	end    
+})
+
+
+
+local CommingSoon = Window:MakeTab({
+	Name = "Comming Soon",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+CommingSoon:AddParagraph("Comming Very Soon","ChannelTabsConfiguration and BubbleChatConfiguration are comming very soon!")
+
+OrionLib:MakeNotification({
+	Name = "Loaded",
+	Content = "Universal Chat Edit exclusive for C0huZz loaded!",
+	Image = "rbxassetid://4483345998",
+	Time = 10
+})
