@@ -438,7 +438,7 @@ local AdminSection = AdminTab:CreateSection("Admin Scripts and More")
 local Button = AdminTab:CreateButton({
    Name = "Infinite Yield",
    Callback = function()
-loadstring(game:HttpGet("https://rawscripts.net/raw/Infinite-Yield_500"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
    end,
 })
 
@@ -450,9 +450,9 @@ loadstring(game:HttpGet("https://rawscripts.net/raw/Ragdoll-Engine-BEST-SCRIPT-W
 })
 
 local Button = AdminTab:CreateButton({
-   Name = "AntiOder Executor SPECIAL",
+   Name = "Nameless Admin",
    Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/sAVghM5x"))()
+loadstring(game:HttpGet("https://github.com/FilteringEnabled/NamelessAdmin/blob/main/Source?raw=true"))()
    end,
 })
 
