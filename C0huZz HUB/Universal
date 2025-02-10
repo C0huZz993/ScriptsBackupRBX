@@ -181,10 +181,10 @@ end)
 
 
 local Window = Rayfield:CreateWindow({
-   Name = "C0huZz HUB 0.1 | Executor: "..identifyexecutor(),
+   Name = "AntiOder Hub 3.0 ❤️ | Executor: "..identifyexecutor(),
    LoadingTitle = "waiting the script loading",
-   LoadingSubtitle = "by C0huZz",
-   Theme = "Amythest",
+   LoadingSubtitle = "by aftr.lua",
+   Theme = "AmberGlow",
    ConfigurationSaving = {
       Enabled = false,
       FolderName = nil, -- Create a custom folder for your hub/game
@@ -227,9 +227,16 @@ Rayfield:Notify({
 },
 })
 
-local Label = ABOUTTab:CreateLabel("C0huZz HUB is remastered script hub")
+local Label = ABOUTTab:CreateLabel("ANTIODER HUB CREATED BY AFTERMATH WITH LOVE.")
+
+
+
+local Button = ABOUTTab:CreateButton({
+   Name = "Telegram channel",
+   Callback = function()
+setclipboard(tostring(copy))
    end,
-)}
+})
 
 local MainTab = Window:CreateTab("Character", "person-standing")
 local MainSection = MainTab:CreateSection("Character")
@@ -256,6 +263,18 @@ local Slider = MainTab:CreateSlider({
    Flag = "sliderjp", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
         game.Players.LocalPlayer.Character.Humanoid.JumpPower = (Value)
+   end,
+})
+
+local Slider = MainTab:CreateSlider({
+   Name = "Gravity",
+   Range = {1, 350},
+   Increment = 1,
+   Suffix = "Speed",
+   CurrentValue = 16,
+   Flag = "sliderjp", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+        game.Workspace.Gravity = (Value)
    end,
 })
 
