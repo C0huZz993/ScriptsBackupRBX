@@ -51,9 +51,9 @@ end)
 
 local Window = Rayfield:CreateWindow({
    Name = "C0huZz HUB 0.1 | Executor: "..identifyexecutor(),
-   LoadingTitle = "waiting the script loading",
+   LoadingTitle = "waiting the hub loading",
    LoadingSubtitle = "by C0huZz",
-   Theme = "Amythest",
+   Theme = "Amethyst",
    ConfigurationSaving = {
       Enabled = false,
       FolderName = nil, -- Create a custom folder for your hub/game
@@ -83,7 +83,7 @@ local ABOUTSection = ABOUTTab:CreateSection("About script")
 
 Rayfield:Notify({
    Title = "Script Executed!",
-   Content = "Welcome to the Phantom Hub | Aftermath Lua Ecosystem",
+   Content = "Welcome to the C0huZz HUB",
    Duration = 5,
    Image = nil,
    Actions = { -- Notification Buttons
@@ -363,6 +363,13 @@ local Button = OtherTab:CreateButton({
    Name = "Universal Silent Aim - U.S.A",
    Callback = function()
 loadstring(game:HttpGet('https://raw.githubusercontent.com/Bac0nHck/Scripts/refs/heads/main/UniversalSilentAim'))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Spectate GUI (By C0huZz)",
+   Callback = function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/SpectateGUI'))()
    end,
 })
 
@@ -655,69 +662,5 @@ local Button = SexTab:CreateButton({
    Name = "Jerk Off",
    Callback = function()
 loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
-   end,
-})
-
-local BrookhavenTrollTab = Window:CreateTab("Brookhaven Troll", nil)
-local BrookhavenTrollSection = BrookhavenTrollTab:CreateSection("House")
-local a = 0;
-local Input = BrookhavenTroll:CreateInput({
-   Name = "House Number",
-   CurrentValue = "",
-   PlaceholderText = "Number",
-   RemoveTextAfterFocusLost = true,
-   Flag = "Input1",
-   Callback = function(Value)
-              a = tonumber(Value) or 0;
-   end,
-})
-
-local Button = BrookhavenTrollTab:CreateButton({
-   Name = "Get Roommate",
-   Callback = function()
-                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\109\211\0\215\231\4\172\71\211\5\193\222\14\176\102\213\25\194\227\14\141\79\200\0\215\197", "\222\42\186\118\178\183\97"),[2]=game[LUAOBFUSACTOR_DECRYPT_STR_0("\109\224\69\147\88\254\87", "\234\61\140\36")][LUAOBFUSACTOR_DECRYPT_STR_0("\13\210\185\115\3\17\209\187\107\10\51", "\111\65\189\218\18")],[3]=a};
-		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\113\78\11\57\2\95\174\87\78\31\6\31\83\189\66\76\30", "\207\35\43\123\85\107\60"))[LUAOBFUSACTOR_DECRYPT_STR_0("\66\143", "\25\16\202\192\138")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\172\251\161\227\176\241\172\217\153\240\160\243\250\206\252\240\140\226\248\197\252\246", "\148\157\171\205\130\201")):FireServer(unpack(args));
-   end,
-})
-
-
-local Button = BrookhavenTrollTab:CreateButton({
-   Name = "Delete Home",
-   Callback = function()
-                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\111\36\175\29\83\77\27\171\8\90\119\39\187\23\83", "\54\63\72\206\100")};
-		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\250\92\85\118\236\120\201\77\64\126\214\111\199\75\68\125\224", "\27\168\57\37\26\133"))[LUAOBFUSACTOR_DECRYPT_STR_0("\31\143", "\183\77\202\28\200")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\70\3\133\9\14\54\155\89\4\27\134\29\4\98\140\43\31\60\128\11\70\54", "\104\119\83\233")):FireServer(unpack(args));
-   end,
-})
-
-local Button = BrookhavenTrollTab:CreateButton({
-   Name = "Open/Close Windows",
-   Callback = function()
-                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\171\206\207\184\160\31\168\48", "\67\232\187\189\204\193\118\198")};
-		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\185\43\165\44\50\1\238\159\43\177\19\47\13\253\138\41\176", "\143\235\78\213\64\91\98"))[LUAOBFUSACTOR_DECRYPT_STR_0("\191\109", "\214\237\40\228\137\16")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\212\211\227\216\26\163\151\178\252\241\12\179\150\178\234", "\198\229\131\143\185\99")):FireServer(unpack(args));
-	
-   end,
-})
-
-local Button = BrookhavenTrollTab:CreateButton({
-   Name = "Lock/Unlock Doors",
-   Callback = function()
-                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\201\169\185\204\172\227\234\180\169", "\140\133\198\218\167\232")};
-		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\135\43\164\113\141\182\47\160\120\128\134\58\187\111\133\178\43", "\228\213\78\212\29"))[LUAOBFUSACTOR_DECRYPT_STR_0("\181\105", "\139\231\44\214\101")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\136\223\10\95\9\180\35\71\202\199\9\75\3\224\52", "\118\185\143\102\62\112\209\81")):FireServer(unpack(args));
-   end,
-})
-
-local Button = BrookhavenTrollTab:CreateButton({
-   Name = "Open/Close Garage",
-   Callback = function()
-                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\107\31\200\161\183\73\58\213\175\162", "\208\44\126\186\192")};
-		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\197\31\180\202\29\255\200\90\242\30\151\210\27\238\200\73\242", "\46\151\122\196\166\116\156\169"))[LUAOBFUSACTOR_DECRYPT_STR_0("\215\200", "\155\133\141\38\122")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\116\26\160\64\86\122\183\116\57\132\78\90\108\244\32", "\197\69\74\204\33\47\31")):FireServer(unpack(args));
-   end,
-})
-
-local Button = BrookhavenTrollTab:CreateButton({
-   Name = "Fire House",
-   Callback = function()
-                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\59\236\34\254\47\215\8\126\5\244\48\193\35\215\58\80\5\198\42\245\47\245\62\108\24\206\44\243\25\205\48\104\2\238\36\198\36\220\48\113\14", "\31\107\128\67\135\74\165\95")};
-		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\234\237\236\65\72\178\217\252\249\73\114\165\215\250\253\74\68", "\209\184\136\156\45\33"))[LUAOBFUSACTOR_DECRYPT_STR_0("\53\237", "\216\103\168\21\104")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\41\157\79\165\97\168\81\245\107\133\76\177\107\252\70", "\196\24\205\35")):FireServer(unpack(args));
    end,
 })
