@@ -181,10 +181,10 @@ end)
 
 
 local Window = Rayfield:CreateWindow({
-   Name = "C0huZz HUB 0.1 | Executor: "..identifyexecutor(),
+   Name = "AntiOder Hub 3.0 ❤️ | Executor: "..identifyexecutor(),
    LoadingTitle = "waiting the script loading",
-   LoadingSubtitle = "by C0huZz",
-   Theme = "Amythest",
+   LoadingSubtitle = "by aftr.lua",
+   Theme = "AmberGlow",
    ConfigurationSaving = {
       Enabled = false,
       FolderName = nil, -- Create a custom folder for your hub/game
@@ -195,17 +195,17 @@ local Window = Rayfield:CreateWindow({
       Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
       RememberJoins = false -- Set this to false to make them join the discord every time they load it up
    },
-    KeySystem = false, -- Set this to true to use our key system
-    KeySettings = {
-       Title = "McDonalds Hub",
-       Subtitle = "Key System",
-       Note = "Key: McDonalds",
-       FileName = "SiriusKey",
-       SaveKey = true,
-       GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-       Key = "McDonalds"
-    }
- })
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Aftermath Key System | рџЋ„",
+      Subtitle = "РїСЂСѓС„Р°РЅРё С‡С‚Рѕ С‚С‹ РЅРµ С„Р°РЅС‚РѕРј ))0)",
+      Note = "РєР»СЋС‡ С‚РѕР»СЊРєРѕ РґР»СЏ РїРѕР»РёСЃРјРµРЅРѕРІ",
+      FileName = "ScriptHubKey1", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"https://pastebin.com/raw/texBrQXF"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
 
 
 
@@ -227,9 +227,16 @@ Rayfield:Notify({
 },
 })
 
-local Label = ABOUTTab:CreateLabel("C0huZz HUB is remastered script hub")
+local Label = ABOUTTab:CreateLabel("ANTIODER HUB CREATED BY AFTERMATH WITH LOVE.")
+
+
+
+local Button = ABOUTTab:CreateButton({
+   Name = "Telegram channel",
+   Callback = function()
+setclipboard(tostring(copy))
    end,
-)}
+})
 
 local MainTab = Window:CreateTab("Character", "person-standing")
 local MainSection = MainTab:CreateSection("Character")
@@ -256,6 +263,18 @@ local Slider = MainTab:CreateSlider({
    Flag = "sliderjp", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
         game.Players.LocalPlayer.Character.Humanoid.JumpPower = (Value)
+   end,
+})
+
+local Slider = MainTab:CreateSlider({
+   Name = "Gravity",
+   Range = {1, 350},
+   Increment = 1,
+   Suffix = "Speed",
+   CurrentValue = 16,
+   Flag = "sliderjp", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+        game.Workspace.Gravity = (Value)
    end,
 })
 
@@ -422,7 +441,7 @@ local AdminSection = AdminTab:CreateSection("Admin Scripts and More")
 local Button = AdminTab:CreateButton({
    Name = "Infinite Yield",
    Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Infinite-Yield_500"))()
    end,
 })
 
@@ -434,19 +453,33 @@ loadstring(game:HttpGet("https://rawscripts.net/raw/Ragdoll-Engine-BEST-SCRIPT-W
 })
 
 local Button = AdminTab:CreateButton({
-   Name = "Nameless Admin"
+   Name = "AntiOder Executor SPECIAL",
    Callback = function()
-loadstring(game:HttpGet("https://github.com/FilteringEnabled/NamelessAdmin/blob/main/Source?raw=true"))()
+loadstring(game:HttpGet("https://pastebin.com/raw/sAVghM5x"))()
    end,
 })
 
-local OtherTab = Window:CreateTab("Universal Scripts", "file-code-2")
-local OtherSection = OtherTab:CreateSection("Universal Scripts")
+local OtherTab = Window:CreateTab("Universal Cool Scripts", "file-code-2")
+local OtherSection = OtherTab:CreateSection("Universal Cool Scripts")
 
 local Button = OtherTab:CreateButton({
-   Name = "Walk On Walls (button Z)",
+   Name = "Fly GUI Antioder edition",
    Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/zXk4Rq2r"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/aftermath-dev/aftermath-hubs/refs/heads/main/fly"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Chat Spy (/spy for toggle)",
+   Callback = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Chat-spy-3000"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Walk On Walls",
+   Callback = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/The-patience-obby-Universal-Walk-on-walls-18129"))()
    end,
 })
 
@@ -458,44 +491,9 @@ loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-R6-Animatio
 })
 
 local Button = OtherTab:CreateButton({
-   Name = "FE Flip (Z and X)",
+   Name = "Mobile Keyboard",
    Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/VN5rFxBE"))()
-   end,
-})
-
-local Button = OtherTab:CreateButton({
-   Name = "Jerk Off R6",
-   Callback = function()
-loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
-   end,
-})
-
-local Button = OtherTab:CreateButton({
-   Name = "Jerk Off R15",
-   Callback = function()
-loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
-   end,
-})
-
-local Button = OtherTab:CreateButton({
-   Name = "AquaMatrix (Animations)",
-   Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ExploitFin/AquaMatrix/refs/heads/AquaMatrix/AquaMatrix"))()
-   end,
-})
-
-local Button = OtherTab:CreateButton({
-   Name = "FE SCP-096 (Required R6 Avatar)",
-   Callback = function()
-loadstring(game:HttpGet("https://pastefy.app/YsJgITXR/raw"))()
-   end,
-})
-
-local Button = OtherTab:CreateButton({
-   Name = "Universal Silent Aim - U.S.A",
-   Callback = function()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Bac0nHck/Scripts/refs/heads/main/UniversalSilentAim'))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
    end,
 })
 
@@ -508,7 +506,7 @@ loadstring(game:HttpGet("https://pastebin.com/raw/gvUFpwQw"))()
 
 
 local Slider = OtherTab:CreateSlider({
-   Name = "Stretched Resolution (Растяг экрана)",
+   Name = "Stretched Resolution (растег экрана)",
    Range = {0.01, 1.00},
    Increment = 0.01,
    Suffix = "Resolution",
@@ -566,7 +564,7 @@ local Toggle = OtherTab:CreateToggle({
 })
 
 local Button = OtherTab:CreateButton({
-   Name = "Btools (Visual)",
+   Name = "B tools (visual lol)",
    Callback = function()
 loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/BTools.txt"))()
    end,
@@ -576,6 +574,91 @@ local Button = OtherTab:CreateButton({
    Name = "Fake Lag",
    Callback = function()
 loadstring(game:HttpGet('https://pastebin.com/raw/VM3b0Thg'))()
+   end,
+})
+
+local Other1Section = OtherTab:CreateSection("Games XDD")
+
+local Button = OtherTab:CreateButton({
+   Name = "Tic Tac Toe with AI",
+   Callback = function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Tic%20Tac%20Toe'))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Math Problem",
+   Callback = function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Math%20Problem'))()
+   end,
+})
+
+local Other2Section = OtherTab:CreateSection("New Other Scripts! (2.00)")
+local Toggle = OtherTab:CreateToggle({
+	Name = "AutoEZ",
+	CurrentValue = false,
+	Flag = "universal_autoez",
+	Callback = function(state)
+		autoez=state
+		while autoez and wait(10) do
+			local num=math.random(1, 6)
+			if num==1 then
+				text='ez killed by antioder hub'
+			elseif num==2 then
+				text='ezzzzzz'
+			elseif num==3 then
+				text='ezzz antioder hub on top'
+			elseif num==4 then
+				text='ez noobs'
+			elseif num==5 then
+				text='ezzed by antioder hubb'
+			elseif num==6 then
+				text='ezzzzz win by antioder hub'
+			end
+			if game.PlaceId==286090429 then -- If arsenal
+				local args = {
+				    [1] = "Hah!",
+				    [2] = text,
+				    [3] = false,
+				    [5] = false,
+				    [6] = true
+				}
+				game:GetService("ReplicatedStorage").Events.PlayerChatted:FireServer(unpack(args))
+				continue
+			end
+			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack({[1]=text, [2]='All'}))
+		end
+	end,
+})
+
+
+
+local TROLLTab = Window:CreateTab("Raid Scripts", "ban")
+local TROLLSection = TROLLTab:CreateSection("Raid Scripts")
+
+
+local Label = TROLLTab:CreateLabel("Check brookhaven tab if you raid brookhaven!!!", "rewind")
+
+
+
+local Button = TROLLTab:CreateButton({
+   Name = "Vfly",
+   Callback = function()
+loadstring(game:HttpGet("https://pastebin.com/raw/BFzqVkQX"))()
+   end,
+})
+
+local Button = TROLLTab:CreateButton({
+   Name = "Invisible FE",
+   Callback = function()
+loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
+   end,
+})
+
+local Button = TROLLTab:CreateButton({
+   Name = "Touch Fling",
+   Callback = function()
+loadstring(game:HttpGet("https://pastebin.com/raw/rfKaavP3"))()
    end,
 })
 
@@ -598,9 +681,16 @@ loadstring(game:HttpGet("https://pastebin.com/raw/w7qBNv2D"))()
 
 
 local Button = ChatTab:CreateButton({
-   Name = "Universal Chat Edit",
+   Name = "Universal Chat Edit (NEW LIBRARY)",
    Callback = function()
 loadstring(game:HttpGet("https://pastebin.com/raw/xSjxnwtb"))()
+   end,
+})
+
+local Button = ChatTab:CreateButton({
+   Name = "Chat Draw",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ocfi/Draw-To-Chat-Obfuscated/refs/heads/main/Draw%20to%20Chat"))()
    end,
 })
 
@@ -652,12 +742,21 @@ loadstring(game:HttpGet("https://pastebin.com/raw/wQ6GFfeG"))()
    end,
 })
 
+local NewsTab = Window:CreateTab("News and Changelog", "newspaper")
+local NewsSection = NewsTab:CreateSection("News")
+
+local Label = NewsTab:CreateLabel("Script officially released on scriptblox.com!", "newspaper")
+local ChangeSection = NewsTab:CreateSection("Changelog")
+
+local Paragraph = NewsTab:CreateParagraph({Title = "1.11 | 01.01.2025", Content = "Added new color of script, updated Server Tab, added changelog"})
+local Paragraph = NewsTab:CreateParagraph({Title = "1.12 | 02.01.2025", Content = "Updated loader"})
+
 local CameraTab = Window:CreateTab("Camera", "camera")
 local CameraSection = CameraTab:CreateSection("Camera")
 
 local Slider = CameraTab:CreateSlider({
    Name = "Field of view",
-   Range = {45, 210},
+   Range = {45, 120},
    Increment = 1,
    Suffix = "field of view",
    CurrentValue = 70,
@@ -751,6 +850,13 @@ local Button = SexTab:CreateButton({
    Name = "Get Suck",
    Callback = function()
 loadstring(game:HttpGet("https://pastebin.com/raw/FPu4e2Qh"))()
+   end,
+})
+
+local Button = SexTab:CreateButton({
+   Name = "Jerk Off",
+   Callback = function()
+loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
    end,
 })
 
