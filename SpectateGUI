@@ -1,0 +1,149 @@
+-- THIS SCRIPT MADE BY COHUZ
+-- KEYBINDS: 
+-- F1 - SPECTATE RANDOM
+-- F2 - RETURN TO YOU
+-- F3 - TELEPORT TO PERSON
+
+local OrionLib = loadstring(game:HttpGet('https://pastebin.com/raw/WRUyYTdY'))()
+
+local Window = OrionLib:MakeWindow({
+    Name = "Spectator GUI",
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "OrionConfig"
+})
+
+local currentSpectatedPlayer = nil
+
+local function spectatePlayer(playerName)
+    local targetPlayer = game.Players:FindFirstChild(playerName)
+    if targetPlayer and targetPlayer.Character then
+        local targetCharacter = targetPlayer.Character
+        local humanoid = targetCharacter:FindFirstChild("Humanoid")
+        if humanoid then
+            workspace.CurrentCamera.CameraSubject = humanoid
+            currentSpectatedPlayer = targetPlayer
+            OrionLib:MakeNotification({
+                Name = "Spectator Mode",
+                Content = "Now spectating: " .. targetPlayer.DisplayName .. " (@" .. targetPlayer.Name .. ")",
+                Time = 5
+            })
+        else
+            warn("Error: Player " .. playerName .. " dont have Humanoid.")
+        end
+    else
+        warn("Erorr: Player " .. playerName .. " not found.")
+    end
+end
+
+local function returnToSelf()
+    local player = game.Players.LocalPlayer
+    if player.Character then
+        local humanoid = player.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            workspace.CurrentCamera.CameraSubject = humanoid
+            currentSpectatedPlayer = nil
+            OrionLib:MakeNotification({
+                Name = "Spectator Mode",
+                Content = "Returned to your character.",
+                Time = 5
+            })
+        else
+            warn("Error: You avatar dont have Humanoid.")
+        end
+    else
+        warn("Error: You avatar dont have Humanoid.")
+    end
+end
+
+local function teleportToSpectatedPlayer()
+    if currentSpectatedPlayer and currentSpectatedPlayer.Character then
+        local targetCharacter = currentSpectatedPlayer.Character
+        local humanoidRootPart = targetCharacter:FindFirstChild("HumanoidRootPart")
+        local localPlayer = game.Players.LocalPlayer
+        local localCharacter = localPlayer.Character
+
+        if humanoidRootPart and localCharacter then
+            local localRootPart = localCharacter:FindFirstChild("HumanoidRootPart")
+            if localRootPart then
+                localRootPart.CFrame = humanoidRootPart.CFrame
+                OrionLib:MakeNotification({
+                    Name = "Teleport",
+                    Content = "Teleported to " .. currentSpectatedPlayer.DisplayName .. " (@" .. currentSpectatedPlayer.Name .. ")",
+                    Time = 5
+                })
+            else
+                warn("Error: You avatar dont have HumanoidRootPart.")
+            end
+        else
+            warn("Error: Player " .. currentSpectatedPlayer.Name .. " dont have HumanoidRootPart.")
+        end
+    else
+        warn("Error: You dont spectate.")
+    end
+end
+
+local PlayersTab = Window:MakeTab({
+    Name = "Players",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+PlayersTab:AddButton({
+    Name = "Return to Self",
+    Callback = function()
+        returnToSelf()
+    end
+})
+
+PlayersTab:AddButton({
+    Name = "Teleport to Spectated Player",
+    Callback = function()
+        teleportToSpectatedPlayer()
+    end
+})
+
+for _, player in pairs(game.Players:GetPlayers()) do
+    if player ~= game.Players.LocalPlayer then
+        PlayersTab:AddButton({
+            Name = player.DisplayName .. " (@" .. player.Name .. ")", -- Display Name и Username
+            Callback = function()
+                spectatePlayer(player.Name)
+            end
+        })
+    end
+end
+
+game.Players.PlayerAdded:Connect(function(newPlayer)
+    PlayersTab:AddButton({
+        Name = newPlayer.DisplayName .. " (@" .. newPlayer.Name .. ")", -- Display Name и Username
+        Callback = function()
+            spectatePlayer(newPlayer.Name)
+        end
+    })
+end)
+
+game.Players.PlayerRemoving:Connect(function(removedPlayer)
+    for _, element in pairs(PlayersTab:GetChildren()) do
+        if element.Name == removedPlayer.DisplayName .. " (@" .. removedPlayer.Name .. ")" then
+            element:Destroy()
+        end
+    end
+end)
+
+-- Hotkeys
+local UserInputService = game:GetService("UserInputService")
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if input.KeyCode == Enum.KeyCode.F1 then
+        local players = game.Players:GetPlayers()
+        local randomPlayer = players[math.random(2, #players)]
+        spectatePlayer(randomPlayer.Name)
+    elseif input.KeyCode == Enum.KeyCode.F2 then
+        returnToSelf()
+    elseif input.KeyCode == Enum.KeyCode.F3 then
+        teleportToSpectatedPlayer()
+    end
+end)
+
+OrionLib:Init()
