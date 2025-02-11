@@ -221,19 +221,19 @@ local MainTab = Window:CreateTab("Character", "person-standing")
 local MainSection = MainTab:CreateSection("Character")
 
 
-local SliderValue = 16 -- Начальное значение скорости
-
-local Slider = MainTab:CreateSlider({
-   Name = "Walk Speed",
-   Range = {1, 350},
-   Increment = 1,
-   Suffix = "Speed",
-   CurrentValue = SliderValue, -- Устанавливаем начальное значение
-   Flag = "sliderws", -- Уникальный идентификатор для сохранения значения
-   Callback = function(Value)
-        SliderValue = Value -- Сохраняем значение в переменную
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-   end,
+local Input = MainTab:CreateInput({
+    Name = "WalkSpeed",
+    PlaceholderText = "WalkSpeed",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local newSpeed = tonumber(Text)
+        if newSpeed then
+            local player = game.Players.LocalPlayer
+            if player.Character and player.Character:FindFirstChild("Humanoid") then
+                player.Character.Humanoid.WalkSpeed = newSpeed
+            end
+        end
+    end,
 })
 
 local function updateSpeed()
