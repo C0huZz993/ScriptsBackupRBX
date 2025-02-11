@@ -1,3 +1,122 @@
+bit32 = {};
+local N = 32;
+local P = 2 ^ N;
+bit32.bnot = function(x)
+	x = x % P;
+	return (P - 1) - x;
+end;
+bit32.band = function(x, y)
+	if (y == 255) then
+		return x % 256;
+	end
+	if (y == 65535) then
+		return x % 65536;
+	end
+	if (y == 4294967295) then
+		return x % 4294967296;
+	end
+	x, y = x % P, y % P;
+	local r = 0;
+	local p = 1;
+	for i = 1, N do
+		local a, b = x % 2, y % 2;
+		x, y = math.floor(x / 2), math.floor(y / 2);
+		if ((a + b) == 2) then
+			r = r + p;
+		end
+		p = 2 * p;
+	end
+	return r;
+end;
+bit32.bor = function(x, y)
+	if (y == 255) then
+		return (x - (x % 256)) + 255;
+	end
+	if (y == 65535) then
+		return (x - (x % 65536)) + 65535;
+	end
+	if (y == 4294967295) then
+		return 4294967295;
+	end
+	x, y = x % P, y % P;
+	local r = 0;
+	local p = 1;
+	for i = 1, N do
+		local a, b = x % 2, y % 2;
+		x, y = math.floor(x / 2), math.floor(y / 2);
+		if ((a + b) >= 1) then
+			r = r + p;
+		end
+		p = 2 * p;
+	end
+	return r;
+end;
+bit32.bxor = function(x, y)
+	x, y = x % P, y % P;
+	local r = 0;
+	local p = 1;
+	for i = 1, N do
+		local a, b = x % 2, y % 2;
+		x, y = math.floor(x / 2), math.floor(y / 2);
+		if ((a + b) == 1) then
+			r = r + p;
+		end
+		p = 2 * p;
+	end
+	return r;
+end;
+bit32.lshift = function(x, s_amount)
+	if (math.abs(s_amount) >= N) then
+		return 0;
+	end
+	x = x % P;
+	if (s_amount < 0) then
+		return math.floor(x * (2 ^ s_amount));
+	else
+		return (x * (2 ^ s_amount)) % P;
+	end
+end;
+bit32.rshift = function(x, s_amount)
+	if (math.abs(s_amount) >= N) then
+		return 0;
+	end
+	x = x % P;
+	if (s_amount > 0) then
+		return math.floor(x * (2 ^ -s_amount));
+	else
+		return (x * (2 ^ -s_amount)) % P;
+	end
+end;
+bit32.arshift = function(x, s_amount)
+	if (math.abs(s_amount) >= N) then
+		return 0;
+	end
+	x = x % P;
+	if (s_amount > 0) then
+		local add = 0;
+		if (x >= (P / 2)) then
+			add = P - (2 ^ (N - s_amount));
+		end
+		return math.floor(x * (2 ^ -s_amount)) + add;
+	else
+		return (x * (2 ^ -s_amount)) % P;
+	end
+end;
+local obf_stringchar = string.char;
+local obf_stringbyte = string.byte;
+local obf_stringsub = string.sub;
+local obf_bitlib = bit32 or bit;
+local obf_XOR = obf_bitlib.bxor;
+local obf_tableconcat = table.concat;
+local obf_tableinsert = table.insert;
+local function LUAOBFUSACTOR_DECRYPT_STR_0(LUAOBFUSACTOR_STR, LUAOBFUSACTOR_KEY)
+	local result = {};
+	for i = 1, #LUAOBFUSACTOR_STR do
+		obf_tableinsert(result, obf_stringchar(obf_XOR(obf_stringbyte(obf_stringsub(LUAOBFUSACTOR_STR, i, i + 1)), obf_stringbyte(obf_stringsub(LUAOBFUSACTOR_KEY, 1 + (i % #LUAOBFUSACTOR_KEY), 1 + (i % #LUAOBFUSACTOR_KEY) + 1))) % 256));
+	end
+	return obf_tableconcat(result);
+end
+
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Sense = loadstring(game:HttpGet('https://raw.githubusercontent.com/jensonhirst/Sirius/request/library/sense/source.lua'))()
 
@@ -662,5 +781,130 @@ local Button = SexTab:CreateButton({
    Name = "Jerk Off",
    Callback = function()
 loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
+   end,
+})
+
+local HouseTab = Window:CreateTab("Brookhaven Troll", nil)
+local HouseSection = HouseTab:CreateSection("House")
+local a = 0;
+local Input = HouseTab:CreateInput({
+   Name = "House Number",
+   CurrentValue = "",
+   PlaceholderText = "Number",
+   RemoveTextAfterFocusLost = true,
+   Flag = "Input1",
+   Callback = function(Value)
+              a = tonumber(Value) or 0;
+   end,
+})
+
+local Button = HouseTab:CreateButton({
+   Name = "Get Roommate",
+   Callback = function()
+                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\109\211\0\215\231\4\172\71\211\5\193\222\14\176\102\213\25\194\227\14\141\79\200\0\215\197", "\222\42\186\118\178\183\97"),[2]=game[LUAOBFUSACTOR_DECRYPT_STR_0("\109\224\69\147\88\254\87", "\234\61\140\36")][LUAOBFUSACTOR_DECRYPT_STR_0("\13\210\185\115\3\17\209\187\107\10\51", "\111\65\189\218\18")],[3]=a};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\113\78\11\57\2\95\174\87\78\31\6\31\83\189\66\76\30", "\207\35\43\123\85\107\60"))[LUAOBFUSACTOR_DECRYPT_STR_0("\66\143", "\25\16\202\192\138")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\172\251\161\227\176\241\172\217\153\240\160\243\250\206\252\240\140\226\248\197\252\246", "\148\157\171\205\130\201")):FireServer(unpack(args));
+   end,
+})
+
+
+local Button = HouseTab:CreateButton({
+   Name = "Delete Home",
+   Callback = function()
+                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\111\36\175\29\83\77\27\171\8\90\119\39\187\23\83", "\54\63\72\206\100")};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\250\92\85\118\236\120\201\77\64\126\214\111\199\75\68\125\224", "\27\168\57\37\26\133"))[LUAOBFUSACTOR_DECRYPT_STR_0("\31\143", "\183\77\202\28\200")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\70\3\133\9\14\54\155\89\4\27\134\29\4\98\140\43\31\60\128\11\70\54", "\104\119\83\233")):FireServer(unpack(args));
+   end,
+})
+
+local Button = HouseTab:CreateButton({
+   Name = "Open/Close Windows",
+   Callback = function()
+                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\171\206\207\184\160\31\168\48", "\67\232\187\189\204\193\118\198")};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\185\43\165\44\50\1\238\159\43\177\19\47\13\253\138\41\176", "\143\235\78\213\64\91\98"))[LUAOBFUSACTOR_DECRYPT_STR_0("\191\109", "\214\237\40\228\137\16")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\212\211\227\216\26\163\151\178\252\241\12\179\150\178\234", "\198\229\131\143\185\99")):FireServer(unpack(args));
+	
+   end,
+})
+
+local Button = HouseTab:CreateButton({
+   Name = "Lock/Unlock Doors",
+   Callback = function()
+                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\201\169\185\204\172\227\234\180\169", "\140\133\198\218\167\232")};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\135\43\164\113\141\182\47\160\120\128\134\58\187\111\133\178\43", "\228\213\78\212\29"))[LUAOBFUSACTOR_DECRYPT_STR_0("\181\105", "\139\231\44\214\101")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\136\223\10\95\9\180\35\71\202\199\9\75\3\224\52", "\118\185\143\102\62\112\209\81")):FireServer(unpack(args));
+   end,
+})
+
+local Button = HouseTab:CreateButton({
+   Name = "Open/Close Garage",
+   Callback = function()
+                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\107\31\200\161\183\73\58\213\175\162", "\208\44\126\186\192")};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\197\31\180\202\29\255\200\90\242\30\151\210\27\238\200\73\242", "\46\151\122\196\166\116\156\169"))[LUAOBFUSACTOR_DECRYPT_STR_0("\215\200", "\155\133\141\38\122")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\116\26\160\64\86\122\183\116\57\132\78\90\108\244\32", "\197\69\74\204\33\47\31")):FireServer(unpack(args));
+   end,
+})
+
+local Button = HouseTab:CreateButton({
+   Name = "Fire House",
+   Callback = function()
+                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\59\236\34\254\47\215\8\126\5\244\48\193\35\215\58\80\5\198\42\245\47\245\62\108\24\206\44\243\25\205\48\104\2\238\36\198\36\220\48\113\14", "\31\107\128\67\135\74\165\95")};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\234\237\236\65\72\178\217\252\249\73\114\165\215\250\253\74\68", "\209\184\136\156\45\33"))[LUAOBFUSACTOR_DECRYPT_STR_0("\53\237", "\216\103\168\21\104")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\41\157\79\165\97\168\81\245\107\133\76\177\107\252\70", "\196\24\205\35")):FireServer(unpack(args));
+   end,
+})
+
+local HouseTab = Window:CreateTab("Avatar Size", nil)
+local HouseSection = HouseTab:CreateSection("Size and Troll Ghost")
+local Button = HouseTab:CreateButton({
+   Name = "Super Small Avatar (fly for move)",
+   Callback = function()
+                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\241\187\193\84\53\34\237\215\161\243\79\46\36\221\221\164\206", "\153\178\211\160\38\84\65"),[2]=4};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\176\14\74\39\139\8\91\63\135\15\105\63\141\25\91\44\135", "\75\226\107\58"))[LUAOBFUSACTOR_DECRYPT_STR_0("\106\251", "\173\56\190\113\26\113\162")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\154\253\33\10\227\195\219\124\22", "\151\171\190\77\101")):FireServer(unpack(args));
+   end,
+})
+
+local Button = HouseTab:CreateButton({
+   Name = "Default Avatar Size",
+   Callback = function()
+                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\133\190\86\193\167\181\67\214\180\133\94\201\163\131\71", "\179\198\214\55"),[2]=1};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\194\9\98\122\76\208\241\24\119\114\118\199\255\30\115\113\64", "\179\144\108\18\22\37"))[LUAOBFUSACTOR_DECRYPT_STR_0("\244\134", "\175\166\195\123\233")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\190\225\81\70\228\231\199\12\90", "\144\143\162\61\41")):FireServer(unpack(args));
+   end,
+})
+
+local Button = HouseTab:CreateButton({
+   Name = "Rainbow Ghost",
+   Callback = function()
+                local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\249\174\116\80\219\165\97\71\200\149\124\88\223\130\122\85\212", "\34\186\198\21"),[2]=4};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\202\13\213\81\203\251\9\209\88\198\203\28\202\79\195\255\13", "\162\152\104\165\61"))[LUAOBFUSACTOR_DECRYPT_STR_0("\255\10", "\133\173\79\210\29\16")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\220\95\225\36\153\116\232\122\158", "\75\237\28\141")):FireServer(unpack(args));
+		local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\203\90\205\163", "\129\188\63\172\209\79\123\135"),[2]=173624651};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\114\225\246\193\73\231\231\217\69\224\213\217\79\246\231\202\69", "\173\32\132\134"))[LUAOBFUSACTOR_DECRYPT_STR_0("\124\62", "\173\46\123\104\143\206\81")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\229\40\50\142\68\151\80\177\60\52\139\81\130\80\166", "\97\212\125\66\234\37\227")):FireServer(unpack(args));
+		local args = {[1]=LUAOBFUSACTOR_DECRYPT_STR_0("\157\230\183\39", "\126\234\131\214\85"),[2]=141742418};
+		game:GetService(LUAOBFUSACTOR_DECRYPT_STR_0("\182\208\89\86\70\135\212\93\95\75\183\193\70\72\78\131\208", "\47\228\181\41\58"))[LUAOBFUSACTOR_DECRYPT_STR_0("\148\217", "\127\198\156\185\91\99\80")]:FindFirstChild(LUAOBFUSACTOR_DECRYPT_STR_0("\164\47\220\244\166\31\104\219\212\12\205\228\166\90\43", "\190\149\122\172\144\199\107\89")):FireServer(unpack(args));
+   end,
+})
+
+local HouseSection = HouseTab:CreateSection("Teleport in Place")
+local Button = HouseTab:CreateButton({
+   Name = "Go to spawn",
+   Callback = function()
+game[LUAOBFUSACTOR_DECRYPT_STR_0("\76\189\167\106\200\110\162", "\173\28\209\198\19")][LUAOBFUSACTOR_DECRYPT_STR_0("\89\227\180\186\121\220\187\186\108\233\165", "\219\21\140\215")][LUAOBFUSACTOR_DECRYPT_STR_0("\107\176\199\181\89\75\172\195\181", "\56\40\216\166\199")][LUAOBFUSACTOR_DECRYPT_STR_0("\14\161\24\46\40\187\28\43\20\187\26\59\22\181\7\59", "\79\70\212\117")][LUAOBFUSACTOR_DECRYPT_STR_0("\132\48\243\199\244\8", "\109\199\118\129\166\153")] = CFrame.new(4, 4, 2);
+   end,
+})
+
+local Button = HouseTab:CreateButton({
+   Name = "Electric",
+   Callback = function()
+game[LUAOBFUSACTOR_DECRYPT_STR_0("\115\41\46\27\235\196\155", "\232\35\69\79\98\142\182")][LUAOBFUSACTOR_DECRYPT_STR_0("\85\15\28\252\117\48\19\252\96\5\13", "\157\25\96\127")][LUAOBFUSACTOR_DECRYPT_STR_0("\132\139\244\23\81\50\179\134\231", "\81\199\227\149\101\48")][LUAOBFUSACTOR_DECRYPT_STR_0("\85\71\246\16\248\137\53\191\79\93\244\5\198\135\46\175", "\219\29\50\155\113\150\230\92")][LUAOBFUSACTOR_DECRYPT_STR_0("\242\6\215\122\242\77", "\45\177\64\165\27\159\40")] = CFrame.new(236, 4, 829);
+   end,
+})
+
+local Button = HouseTab:CreateButton({
+   Name = "Inside Electric",
+   Callback = function()
+game[LUAOBFUSACTOR_DECRYPT_STR_0("\57\9\30\47\74\186\229", "\150\105\101\127\86\47\200")][LUAOBFUSACTOR_DECRYPT_STR_0("\226\253\240\180\203\240\194\243\234\176\213", "\160\174\146\147\213\167")][LUAOBFUSACTOR_DECRYPT_STR_0("\99\236\27\86\13\66\84\225\8", "\33\32\132\122\36\108")][LUAOBFUSACTOR_DECRYPT_STR_0("\145\1\127\74\114\182\29\118\121\115\182\0\66\74\110\173", "\28\217\116\18\43")][LUAOBFUSACTOR_DECRYPT_STR_0("\241\113\196\85\221\171", "\92\178\55\182\52\176\206")] = CFrame.new(235, 5, 812);
+   end,
+})
+local function teleportToCriminal()
+		game[LUAOBFUSACTOR_DECRYPT_STR_0("\42\57\112\12\31\39\98", "\117\122\85\17")][LUAOBFUSACTOR_DECRYPT_STR_0("\164\224\41\69\170\237\132\238\51\65\180", "\189\232\143\74\36\198")][LUAOBFUSACTOR_DECRYPT_STR_0("\223\162\11\92\214\9\232\175\24", "\106\156\202\106\46\183")][LUAOBFUSACTOR_DECRYPT_STR_0("\21\12\118\50\36\50\16\127\1\37\50\13\75\50\56\41", "\74\93\121\27\83")][LUAOBFUSACTOR_DECRYPT_STR_0("\94\157\244\127\112\190", "\30\29\219\134")] = CFrame.new(-119, -28, 235);
+end
+local Button = HouseTab:CreateButton({
+   Name = "Criminal",
+   Callback = function()
+teleportToCriminal();
    end,
 })
