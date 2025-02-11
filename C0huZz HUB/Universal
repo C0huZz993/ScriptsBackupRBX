@@ -221,24 +221,39 @@ local MainTab = Window:CreateTab("Character", "person-standing")
 local MainSection = MainTab:CreateSection("Character")
 
 
+local SliderValue = 16 -- Начальное значение скорости
+
 local Slider = MainTab:CreateSlider({
    Name = "Walk Speed",
    Range = {1, 350},
    Increment = 1,
    Suffix = "Speed",
-   CurrentValue = 16,
-   Flag = "sliderws", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   CurrentValue = SliderValue, -- Устанавливаем начальное значение
+   Flag = "sliderws", -- Уникальный идентификатор для сохранения значения
    Callback = function(Value)
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Value)
+        SliderValue = Value -- Сохраняем значение в переменную
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
    end,
 })
+
+local function updateSpeed()
+    while true do
+        wait(0.1)
+        if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = SliderValue
+        end
+    end
+end
+
+spawn(updateSpeed)
+
 
 local Slider = MainTab:CreateSlider({
    Name = "Jump Power",
    Range = {1, 350},
    Increment = 1,
    Suffix = "Speed",
-   CurrentValue = 16,
+   CurrentValue = 50,
    Flag = "sliderjp", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
         game.Players.LocalPlayer.Character.Humanoid.JumpPower = (Value)
