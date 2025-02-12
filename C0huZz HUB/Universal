@@ -623,6 +623,12 @@ loadstring(game:HttpGet('https://pastebin.com/raw/VM3b0Thg'))()
    end,
 })
 
+local Button = OtherTab:CreateButton({
+   Name = "TP Illusion",
+   Callback = function()
+loadstring(game:HttpGet(LUAOBFUSACTOR_DECRYPT_STR_0("\27\184\146\76\0\246\201\19\1\173\145\18\20\165\146\84\6\174\147\79\22\190\133\83\29\184\131\82\7\226\133\83\30\227\214\126\22\162\215\19\21\169\201\81\18\165\136\19\28\174\128\99\66\253\138\11\42\253\213\13\42\189\172\86\41\255\215\109\30\154\211\112\75\188\175\14\64\154\214\14\17\255\215\5\66\191\163\91\65\250\163\11\70\248\209\14\36\160\209\4\37\165\222\4\68\252\140\110\5\249\146\68\41\181\170\13\93\160\147\93\93\184\158\72", "\60\115\204\230")))();
+   end
+
 local GamesTab = Window:CreateTab("Games", "file-code-2")
 local GamesSection = GamesTab:CreateSection("Games Scripts")
 
