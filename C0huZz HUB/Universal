@@ -442,9 +442,10 @@ loadstring(game:HttpGet("https://github.com/FilteringEnabled/NamelessAdmin/blob/
 })
 
 local Button = AdminTab:CreateButton({
-	Name = "LScripts",
+    Name = "LHub (Скопировать в буфер обмена)",
     Callback = function()
-loadstring(game:HttpGet(('https://raw.githubusercontent.com/loothyy/scripts/refs/heads/main/lhub.lua'),true))()
+        local textToCopy = "loadstring(game:HttpGet(('https://raw.githubusercontent.com/loothyy/scripts/refs/heads/main/lhub.lua'),true))()"
+        setclipboard(textToCopy)
     end,
 })
 
