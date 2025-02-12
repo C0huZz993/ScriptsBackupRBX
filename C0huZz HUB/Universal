@@ -169,7 +169,7 @@ end)
 
 
 local Window = Rayfield:CreateWindow({
-   Name = "C0huZz HUB 0.1.2 | Executor: "..identifyexecutor(),
+   Name = "C0huZz HUB 0.1.3 | Executor: "..identifyexecutor(),
    LoadingTitle = "waiting the hub loading",
    LoadingSubtitle = "by C0huZz",
    Theme = "Amethyst",
@@ -505,6 +505,27 @@ local Button = OtherTab:CreateButton({
    Name = "FE SCP-096 (Required R6 Avatar)",
    Callback = function()
 loadstring(game:HttpGet("https://pastefy.app/YsJgITXR/raw"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Change Avatar Rig (R15/R6)",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/CNGRIG"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "FE Seraphic Blade",
+   Callback = function()
+loadstring(game:HttpGet("https://pastefy.app/59mJGQGe/raw"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Touch Fling",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/Touch-Fling"))()
    end,
 })
 
