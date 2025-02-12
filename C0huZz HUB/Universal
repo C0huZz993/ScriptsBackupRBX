@@ -451,14 +451,14 @@ loadstring(game:HttpGet('https://sirius.menu/sirius'))()
 local Button = AdminTab:CreateButton({
 	Name = "LHub",
 	Callback = function()
-loadstring(game:HttpGet('loadstring(game:HttpGet("https://raw.githubusercontent.com/loothyy/scripts/refs/heads/main/lhub.lua"))()'))()
+loadstring(game:HttpGet('loadstring(game:HttpGet("https://raw.githubusercontent.com/loothyy/scripts/refs/heads/main/lhub.lua"))()
 	end,
 })
 
 local Button = AdminTab:CreateButton({
 	Name = "EZHub",
 	Callback = function()
-loadstring(game:HttpGet('loadstring(game:HttpGet("https://raw.githubusercontent.com/debug420/Ez-Hub/refs/heads/master/EzHub.lua"))()'))()
+loadstring(game:HttpGet('loadstring(game:HttpGet("https://raw.githubusercontent.com/debug420/Ez-Hub/refs/heads/master/EzHub.lua"))()
 	end,
 })
 
