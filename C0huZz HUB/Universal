@@ -564,6 +564,13 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/C0huZz993/ScriptsBack
    end,
 })
 
+local Button = OtherTab:CreateButton({
+   Name = "FE Shapeshifter anim (BETA TEST)",
+   Callback = function()
+loadstring(game:HttpGet('https://pastefy.app/kWOBnd7E/raw'))()
+   end,
+})
+
 local Slider = OtherTab:CreateSlider({
    Name = "Stretched Resolution (Растяг экрана)",
    Range = {0.01, 1.00},
@@ -595,6 +602,12 @@ loadstring(game:HttpGet("https://pastebin.com/raw/dAnuL1X3"))()
    end,
 })
 
+local Button = OtherTab:CreateButton({
+   Name = "Telekinesis",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/Telekinesis"))()
+   end,
+})
 
 local Button = OtherTab:CreateButton({
    Name = "Ambient NO FE",
