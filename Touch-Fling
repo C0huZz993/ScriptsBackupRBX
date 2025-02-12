@@ -1,8 +1,3 @@
--- Touch fling gui credits to Duplex i added antifling
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/GGH52lan/GGH52lan/main/anti-fling.txt"))()
-
-
 -- Gui to Lua (VIP VERSION)
 -- Version: 6.9
 
