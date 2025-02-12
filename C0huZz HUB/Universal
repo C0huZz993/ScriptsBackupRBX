@@ -417,7 +417,7 @@ end
 
 
 
-local AdminTab = Window:CreateTab("Admin Scripts and More", "file-sliders")
+local AdminTab = Window:CreateTab("Admin Scripts and HUBs", "file-sliders")
 local AdminSection = AdminTab:CreateSection("Admin Scripts and More")
 
 local Button = AdminTab:CreateButton({
@@ -439,6 +439,13 @@ local Button = AdminTab:CreateButton({
    Callback = function()
 loadstring(game:HttpGet("https://github.com/FilteringEnabled/NamelessAdmin/blob/main/Source?raw=true"))()
    end,
+})
+
+local Button = AdminTab:CreateButton({
+	Name = "Sirius Menu",
+	Callback = function()
+loadstring(game:HttpGet('https://sirius.menu/sirius'))()
+	end,
 })
 
 local OtherTab = Window:CreateTab("Universal Scripts", "file-code-2")
@@ -587,7 +594,7 @@ loadstring(game:HttpGet('https://pastebin.com/raw/VM3b0Thg'))()
    end,
 })
 
-local GamesTab = Window:CreateTab("Games", "file-code-1")
+local GamesTab = Window:CreateTab("Games", "file-code-2")
 local GamesSection = GamesTab:CreateSection("Games Scripts")
 
 local Button = GamesTab:CreateButton({
@@ -839,6 +846,7 @@ local Button = HouseTab:CreateButton({
 })
 
 local HouseSection = HouseTab:CreateSection("Size and Troll Ghost")
+
 local Button = HouseTab:CreateButton({
    Name = "Super Small Avatar (fly for move)",
    Callback = function()
