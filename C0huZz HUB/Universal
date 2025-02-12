@@ -442,17 +442,17 @@ loadstring(game:HttpGet("https://github.com/FilteringEnabled/NamelessAdmin/blob/
 })
 
 local Button = AdminTab:CreateButton({
-	Name = "LHub",
-	Callback = function()
+	Name = "LScripts",
+    Callback = function()
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/loothyy/scripts/refs/heads/main/lhub.lua'),true))()
-	end,
+    end,
 })
 
 local Button = AdminTab:CreateButton({
 	Name = "Sirius Menu",
 	Callback = function()
 loadstring(game:HttpGet('https://sirius.menu/sirius'))()
-	end,
+    end,
 })
 
 local OtherTab = Window:CreateTab("Universal Scripts", "file-code-2")
