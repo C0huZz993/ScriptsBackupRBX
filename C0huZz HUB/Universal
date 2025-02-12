@@ -587,6 +587,23 @@ loadstring(game:HttpGet('https://pastebin.com/raw/VM3b0Thg'))()
    end,
 })
 
+local GamesTab = Window:CreateTab("Games", "file-code-1")
+local GamesSection = GamesTab:CreateSection("Games Scripts")
+
+local Button = GamesTab:CreateButton({
+   Name = "Natural Disaster Survival KaterHUB",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/KaterHub-Inc/NaturalDisasterSurvival/refs/heads/main/main.lua"))()
+   end,
+})
+
+local Button = GamesTab:CreateButton({
+   Name = "The Rake Remastered ZeeroxHUB",
+   Callback = function()
+loadstring(game:HttpGet'https://raw.githubusercontent.com/RunDTM/ZeeroxHub/main/Loader.lua')()
+   end,
+})
+
 local ChatTab = Window:CreateTab("Chat", "message-square-more")
 local ChatSection = ChatTab:CreateSection("Chat Scripts")
 
@@ -821,8 +838,6 @@ local Button = HouseTab:CreateButton({
    end,
 })
 
-
-local HouseTab = Window:CreateTab("Avatar Size", nil)
 local HouseSection = HouseTab:CreateSection("Size and Troll Ghost")
 local Button = HouseTab:CreateButton({
    Name = "Super Small Avatar (fly for move)",
