@@ -169,7 +169,7 @@ end)
 
 
 local Window = Rayfield:CreateWindow({
-   Name = "C0huZz HUB 0.1.4 | Executor: "..identifyexecutor(),
+   Name = "C0huZz HUB 0.1.5 | Executor: "..identifyexecutor(),
    LoadingTitle = "waiting the hub loading",
    LoadingSubtitle = "by C0huZz",
    Theme = "Amethyst",
@@ -642,6 +642,20 @@ loadstring(game:HttpGet(LUAOBFUSACTOR_DECRYPT_STR_0("\27\184\146\76\0\246\201\19
    end,
 })
 
+local Button = OtherTab:CreateButton({
+   Name = "Gravity Lay GUI",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Underssky/GravityLayScript/refs/heads/main/MainGravityLay.txt"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Fly GUI V3",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
+   end,
+})
+
 local GamesTab = Window:CreateTab("Games", "file-code-2")
 local GamesSection = GamesTab:CreateSection("Games Scripts")
 
@@ -656,6 +670,20 @@ local Button = GamesTab:CreateButton({
    Name = "The Rake Remastered ZeeroxHUB",
    Callback = function()
 loadstring(game:HttpGet'https://raw.githubusercontent.com/RunDTM/ZeeroxHub/main/Loader.lua')()
+   end,
+})
+
+local Button = GamesTab:CreateButton({
+   Name = "Brookhaven Darkones GUI",
+   Callback = function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/TheDarkoneMarcillisePex/Other-Scripts/main/Brook%20Haven%20Gui'))()
+   end,
+})
+
+local Button = GamesTab:CreateButton({
+   Name = "Brookhaven SanderX",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/sXPiterXs1111/Sanderx3.25/main/sanderxv3.25.lua"))()
    end,
 })
 
