@@ -170,7 +170,7 @@ end)
 
 local Window = Rayfield:CreateWindow({
    Name = "C0huZz HUB 0.2 | Brookhaven RP Edition | Executor: "..identifyexecutor(),
-   LoadingTitle = "waiting the hub loading",
+   LoadingTitle = "Wait the HUB is loading",
    LoadingSubtitle = "by C0huZz",
    Theme = "Amethyst",
    ConfigurationSaving = {
