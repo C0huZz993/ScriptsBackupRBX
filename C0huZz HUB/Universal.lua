@@ -169,7 +169,7 @@ end)
 
 
 local Window = Rayfield:CreateWindow({
-   Name = "C0huZz HUB 0.2 | Universal | Executor: "..identifyexecutor(),
+   Name = "C0huZz HUB 0.2.1 | Universal | Executor: "..identifyexecutor(),
    LoadingTitle = "Wait the HUB is loading",
    LoadingSubtitle = "by C0huZz",
    Theme = "Amethyst",
@@ -221,6 +221,7 @@ local ABOUTSection = ABOUTTab:CreateSection("Changelog")
 
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.1.8 | 19.02.25", Content = "Added Changelog; Added new TP locations; Added new brook skins; Added SCPRP script to Games Tab; Added DEX"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2 | 20.02.25", Content = "???"})
+local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.1 | 22.02.25", Content = "Added Slap Battle GUI; Added Scriptblox searcher; Added FE Black Hole; Added MM2 XHub; Added FakeChat; Added 3 new scripts"})
 
 local MainTab = Window:CreateTab("Character", "person-standing")
 local MainSection = MainTab:CreateSection("Character")
@@ -668,6 +669,48 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/
    end,
 })
 
+local Button = OtherTab:CreateButton({
+   Name = "Scriptblox In-Game Searcher",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/chillz-workshop/main/ScriptSearcher"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "FE Black Hole (Bring Parts)",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Bac0nHck/Scripts/main/BringFlingPlayers"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Fake Chat (Nameless Admin Func.)",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/FakeChat"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Stare at People",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hassanxzayn-lua/NEOXHUBMAIN/refs/heads/main/stare"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "Chat Draw",
+   Callback = function()
+loadstring(game:HttpGet("https://pastebin.com/raw/s5rtS3DB"))()
+   end,
+})
+
+local Button = OtherTab:CreateButton({
+   Name = "FE Tools Draw",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Affexter/Programs/refs/heads/main/scripts/tooldrawFE.lua"))()
+   end,
+})
+
 local GamesTab = Window:CreateTab("Games", "file-code-2")
 local GamesSection = GamesTab:CreateSection("Games Scripts")
 
@@ -703,6 +746,20 @@ local Button = GamesTab:CreateButton({
    Name = "SCPRP NullZen Script",
    Callback = function()
 loadstring(game:HttpGet('https://raw.githubusercontent.com/axleoislost/NullZen/main/Scp-Roleplay'))()
+   end,
+})
+
+local Button = GamesTab:CreateButton({
+   Name = "Slap Battles ForgeHub",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Skzuppy/forge-hub/main/loader.lua"))()
+   end,
+})
+
+local Button = GamesTab:CreateButton({
+   Name = "MM2 XHub",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/XhubMM2"))()
    end,
 })
 
