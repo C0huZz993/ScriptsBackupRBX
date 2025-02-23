@@ -4,7 +4,7 @@ local InputBarConfig = TextChat.ChatInputBarConfiguration
 local BubbleConfig = TextChat.BubbleChatConfiguration
 
 local OrionLib = loadstring(game:HttpGet(('https://pastebin.com/raw/WRUyYTdY')))()
-local Window = OrionLib:MakeWindow({Name = "Universal Chat Edit v0.0.2", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+local Window = OrionLib:MakeWindow({Name = "Universal Chat Edit v0.0.3", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
 
 
 --|| CHAT WINDOW CONFIGS ||--
@@ -16,7 +16,7 @@ local ChatWindow = Window:MakeTab({
 	PremiumOnly = false
 })
 
-ChatWindow:AddParagraph("v0.0.2","library was fixed for mobile! enjoy! by C0huZz")
+ChatWindow:AddParagraph("v0.0.3","library was fixed for mobile! enjoy! by C0huZz")
 
 ChatWindow:AddToggle({
 	Name = "Enabled",
@@ -274,40 +274,16 @@ BubbleWindow:AddSlider({
 	end    
 })
 
-BubbleWindow:AddSlider({
-	Name = "Bubble Duration",
-	Min = 1,
-	Max = 600,
-	Default = 1,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "duration",
-	Callback = function(Value)
-		BubbleConfig.BubbleDuration = Value
-	end    
-})
 
-BubbleWindow:AddSlider({
-	Name = "Bubble Spacing",
-	Min = 1,
-	Max = 50,
-	Default = 6,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "space",
-	Callback = function(Value)
-		BubbleConfig.BubbleDuration = Value
-	end    
-})
 
 BubbleWindow:AddSlider({
 	Name = "Max Bubbles",
 	Min = 1,
 	Max = 6,
-	Default = 3,
+	Default = 4,
 	Color = Color3.fromRGB(255,255,255),
 	Increment = 1,
-	ValueName = "max",
+	ValueName = "Max (Default = 4)",
 	Callback = function(Value)
 		BubbleConfig.MaxBubbles = Value
 	end    
@@ -317,10 +293,10 @@ BubbleWindow:AddSlider({
 	Name = "Max Distance",
 	Min = 1,
 	Max = 1000,
-	Default = 1,
+	Default = 140,
 	Color = Color3.fromRGB(255,255,255),
 	Increment = 1,
-	ValueName = "distance",
+	ValueName = "Distance (Default = 140)",
 	Callback = function(Value)
 		BubbleConfig.MaxDistance = Value
 	end    
@@ -330,30 +306,16 @@ BubbleWindow:AddSlider({
 	Name = "Minimize Distance",
 	Min = 1,
 	Max = 100,
-	Default = 1,
+	Default = 80,
 	Color = Color3.fromRGB(255,255,255),
 	Increment = 1,
-	ValueName = "minimize dist",
+	ValueName = "Minimize dist (Default = 80)",
 	Callback = function(Value)
 		BubbleConfig.MinimizeDistance = Value
 	end    
 })
 
 BubbleWindow:AddParagraph("Minimize", "This is how much stoods is distance to make text '...'")
-
-BubbleWindow:AddSlider({
-	Name = "Vertical Studs Offset",
-	Min = 0,
-	Max = 100,
-	Default = 0,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "vertical offset",
-	Callback = function(Value)
-		BubbleConfig.VerticalStudsOffset = Value
-	end    
-})
-
 
 
 local CommingSoon = Window:MakeTab({
