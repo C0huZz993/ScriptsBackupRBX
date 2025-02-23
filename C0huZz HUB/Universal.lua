@@ -727,7 +727,7 @@ loadstring(game:HttpGet("https://pastebin.com/raw/w7qBNv2D"))()
 local Button = ChatTab:CreateButton({
    Name = "Universal Chat Edit",
    Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/xSjxnwtb"))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/Universal%20Chat%20Editor/script'))()
    end,
 })
 
