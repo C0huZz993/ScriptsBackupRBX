@@ -1,0 +1,6 @@
+backpack = game:GetService("Players").LocalPlayer.Backpack
+
+hammer = Instance.new("HopperBin")
+hammer.Name = "Hammer"
+hammer.BinType = 4
+hammer.Parent = backpack
