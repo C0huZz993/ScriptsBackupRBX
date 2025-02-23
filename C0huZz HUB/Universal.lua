@@ -221,7 +221,7 @@ local ABOUTSection = ABOUTTab:CreateSection("Changelog")
 
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.1.8 | 19.02.25", Content = "Added Changelog; Added new TP locations; Added new brook skins; Added SCPRP script to Games Tab; Added DEX"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2 | 20.02.25", Content = "???"})
-local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.1 | 22.02.25", Content = "Added Slap Battle GUI; Added Scriptblox searcher; Added FE Black Hole; Added MM2 XHub; Added FakeChat; Added 3 new scripts"})
+local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.1 | 22.02.25", Content = "Added Slap Battle GUI; Added Scriptblox searcher; Added FE Black Hole; Added MM2 XHub; Added FakeChat; Added 3 new scripts; Temporarily removed FOV slider"})
 
 local MainTab = Window:CreateTab("Character", "person-standing")
 local MainSection = MainTab:CreateSection("Character")
@@ -372,56 +372,6 @@ local Toggle = FuncTab:CreateToggle({
 		end
 	end,
 })
-
-local FuncccSection = FuncTab:CreateSection("View and teleport")
-local viewEnabled = false
-local selectedViewPlayer = nil
-local characterAddedConnection = nil
-
--- Função para ativar ou desativar a visualização do jogador
-local function toggleView(enabled)
-    if enabled then
-        if selectedViewPlayer then
-            local player = selectedViewPlayer
-            if player then
-                game.Workspace.CurrentCamera.CameraSubject = player.Character
-                if characterAddedConnection then
-                    characterAddedConnection:Disconnect()
-                end
-                characterAddedConnection = player.CharacterAdded:Connect(function(character)
-                    game.Workspace.CurrentCamera.CameraSubject = character
-                end)
-            else
-                print("Jogador não encontrado.")
-                viewEnabled = false
-            end
-        else
-            print("Nenhum jogador selecionado para a visualização.")
-            viewEnabled = false
-        end
-    else
-        if characterAddedConnection then
-            characterAddedConnection:Disconnect()
-            characterAddedConnection = nil
-        end
-        game.Workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
-    end
-end
-
-local function findPlayerByPartialNameOrNickname(partialName)
-    local partial = partialName:sub(1, 2):lower()
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        if player.Name:lower():sub(1, 2) == partial or (player.DisplayName and player.DisplayName:lower():sub(1, 2) == partial) then
-            return player
-        end
-    end
-    return nil
-end
-
-
-
-
-
 
 local AdminTab = Window:CreateTab("Admin Scripts and HUBs", "file-sliders")
 local AdminSection = AdminTab:CreateSection("Admin and OP Scripts")
@@ -615,13 +565,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBack
    end,
 })
 
-local Button = OtherTab:CreateButton({
-   Name = "Ambient NO FE",
-   Callback = function()
-loadstring(game:HttpGet('https://pastefy.app/S7xNJSXX/raw'))()execute("Script14")
-   end,
-})
-
 local Toggle = OtherTab:CreateToggle({
 	Name = "Anti-AFK",
 	CurrentValue = false,
@@ -635,9 +578,9 @@ local Toggle = OtherTab:CreateToggle({
 })
 
 local Button = OtherTab:CreateButton({
-   Name = "Btools (Visual)",
+   Name = "Delete Tool (Visual)",
    Callback = function()
-loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/BTools.txt"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/Delete-Tool"))()
    end,
 })
 
@@ -836,23 +779,15 @@ loadstring(game:HttpGet("https://pastebin.com/raw/wQ6GFfeG"))()
    end,
 })
 
-local CameraTab = Window:CreateTab("Camera", "camera")
-local CameraSection = CameraTab:CreateSection("Camera")
-
-local Slider = CameraTab:CreateSlider({
-   Name = "Field of view",
-   Range = {45, 210},
-   Increment = 1,
-   Suffix = "field of view",
-   CurrentValue = 70,
-   Flag = "sliderfov", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(value)
-        tweenService:Create(camera, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), { FieldOfView = value }):Play()
-   end,
-})
-
 local VisualTab = Window:CreateTab("Visual", "eye")
 local VisualSection = VisualTab:CreateSection("Visual")
+
+local Button = VisualTab:CreateButton({
+   Name = "Ambient NO FE",
+   Callback = function()
+loadstring(game:HttpGet('https://pastefy.app/S7xNJSXX/raw'))()execute("Script14")
+   end,
+})
 
 local Toggle = VisualTab:CreateToggle({
 	Name = "Pink Glasses",
