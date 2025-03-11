@@ -116,7 +116,8 @@ local function LUAOBFUSACTOR_DECRYPT_STR_0(LUAOBFUSACTOR_STR, LUAOBFUSACTOR_KEY)
 	end
 	return obf_tableconcat(result);
 end
-
+local camera = workspace.CurrentCamera
+local tweenService = game:GetService("TweenService")
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Sense = loadstring(game:HttpGet('https://raw.githubusercontent.com/jensonhirst/Sirius/request/library/sense/source.lua'))()
 
@@ -169,7 +170,7 @@ end)
 
 
 local Window = Rayfield:CreateWindow({
-   Name = "C0huZz HUB 0.2.2 | Brookhaven RP | Executor: "..identifyexecutor(),
+   Name = "C0huZz HUB 0.2.2 | Universal | Executor: "..identifyexecutor(),
    LoadingTitle = "Wait the HUB is loading",
    LoadingSubtitle = "by C0huZz",
    Theme = "Amethyst",
@@ -222,7 +223,7 @@ local ABOUTSection = ABOUTTab:CreateSection("Changelog")
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.1.8 | 19.02.25", Content = "Added Changelog; Added new TP locations; Added new brook skins; Added SCPRP script to Games Tab; Added DEX"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2 | 20.02.25", Content = "???"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.1 | 22.02.25", Content = "Added Slap Battle GUI; Added Scriptblox searcher; Added FE Black Hole; Added MM2 XHub; Added FakeChat; Added 3 new scripts; Temporarily removed FOV slider"})
-local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.2 | 10.03.25", Content = "Added division of HUB into games; Remove FOV slider forever; Flashback scripts fixed by roblox"})
+local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.2 | 10.03.25", Content = "Added division of HUB into games; Added back FOV slider; Flashback scripts fixed by roblox"})
 
 
 local MainTab = Window:CreateTab("Character", "person-standing")
@@ -793,14 +794,21 @@ loadstring(game:HttpGet("https://pastebin.com/raw/wQ6GFfeG"))()
 })
 
 local VisualTab = Window:CreateTab("Visual", "eye")
-local VisualSection = VisualTab:CreateSection("Visual")
+local VisualSection = VisualTab:CreateSection("FOV")
 
-local Button = VisualTab:CreateButton({
-   Name = "Ambient NO FE",
-   Callback = function()
-loadstring(game:HttpGet('https://pastefy.app/S7xNJSXX/raw'))()execute("Script14")
+local Slider = VisualTab:CreateSlider({
+   Name = "Field of view",
+   Range = {45, 120},
+   Increment = 1,
+   Suffix = "field of view",
+   CurrentValue = 70,
+   Flag = "sliderfov", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(value)
+        tweenService:Create(camera, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), { FieldOfView = value }):Play()
    end,
 })
+
+local VisualSection = VisualTab:CreateSection("Visuals")
 
 local Toggle = VisualTab:CreateToggle({
 	Name = "Pink Glasses",
