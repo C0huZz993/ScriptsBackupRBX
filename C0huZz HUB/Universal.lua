@@ -116,7 +116,8 @@ local function LUAOBFUSACTOR_DECRYPT_STR_0(LUAOBFUSACTOR_STR, LUAOBFUSACTOR_KEY)
 	end
 	return obf_tableconcat(result);
 end
-
+local camera = workspace.CurrentCamera
+local tweenService = game:GetService("TweenService")
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Sense = loadstring(game:HttpGet('https://raw.githubusercontent.com/jensonhirst/Sirius/request/library/sense/source.lua'))()
 
@@ -792,7 +793,10 @@ loadstring(game:HttpGet("https://pastebin.com/raw/wQ6GFfeG"))()
    end,
 })
 
-local Slider = CameraTab:CreateSlider({
+local VisualTab = Window:CreateTab("Visual", "eye")
+local VisualSection = VisualTab:CreateSection("FOV")
+
+local Slider = VisualTab:CreateSlider({
    Name = "Field of view",
    Range = {45, 120},
    Increment = 1,
@@ -804,8 +808,7 @@ local Slider = CameraTab:CreateSlider({
    end,
 })
 
-local VisualTab = Window:CreateTab("Visual", "eye")
-local VisualSection = VisualTab:CreateSection("Visual")
+local VisualSection = VisualTab:CreateSection("Visuals")
 
 local Toggle = VisualTab:CreateToggle({
 	Name = "Pink Glasses",
