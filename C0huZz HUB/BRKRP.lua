@@ -526,7 +526,7 @@ local Button = OtherTab:CreateButton({
    Name = "Flashback (E)",
     Callback = function()
         Rayfield:Notify({
-            Title = "Error! Scripts has fixed by Roblox",
+            Title = "Error! Script has fixed",
             Content = "Roblox Fixed Flashback Scripts :(",
             Duration = 4, -- Duration in seconds
         })
