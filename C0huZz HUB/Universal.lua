@@ -222,7 +222,7 @@ local ABOUTSection = ABOUTTab:CreateSection("Changelog")
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.1.8 | 19.02.25", Content = "Added Changelog; Added new TP locations; Added new brook skins; Added SCPRP script to Games Tab; Added DEX"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2 | 20.02.25", Content = "???"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.1 | 22.02.25", Content = "Added Slap Battle GUI; Added Scriptblox searcher; Added FE Black Hole; Added MM2 XHub; Added FakeChat; Added 3 new scripts; Temporarily removed FOV slider"})
-local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.2 | 10.03.25", Content = "Added division of HUB into games; Remove FOV slider forever; Flashback scripts fixed by roblox"})
+local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.2 | 10.03.25", Content = "Added division of HUB into games; Added back FOV slider; Flashback scripts fixed by roblox"})
 
 
 local MainTab = Window:CreateTab("Character", "person-standing")
@@ -526,7 +526,7 @@ local Button = OtherTab:CreateButton({
    Name = "Flashback (E)",
     Callback = function()
         Rayfield:Notify({
-            Title = "Error! Scripts has fixed by Roblox",
+            Title = "Error! Script has fixed",
             Content = "Roblox Fixed Flashback Scripts :(",
             Duration = 4, -- Duration in seconds
         })
@@ -792,15 +792,20 @@ loadstring(game:HttpGet("https://pastebin.com/raw/wQ6GFfeG"))()
    end,
 })
 
-local VisualTab = Window:CreateTab("Visual", "eye")
-local VisualSection = VisualTab:CreateSection("Visual")
-
-local Button = VisualTab:CreateButton({
-   Name = "Ambient NO FE",
-   Callback = function()
-loadstring(game:HttpGet('https://pastefy.app/S7xNJSXX/raw'))()execute("Script14")
+local Slider = CameraTab:CreateSlider({
+   Name = "Field of view",
+   Range = {45, 120},
+   Increment = 1,
+   Suffix = "field of view",
+   CurrentValue = 70,
+   Flag = "sliderfov", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(value)
+        tweenService:Create(camera, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), { FieldOfView = value }):Play()
    end,
 })
+
+local VisualTab = Window:CreateTab("Visual", "eye")
+local VisualSection = VisualTab:CreateSection("Visual")
 
 local Toggle = VisualTab:CreateToggle({
 	Name = "Pink Glasses",
