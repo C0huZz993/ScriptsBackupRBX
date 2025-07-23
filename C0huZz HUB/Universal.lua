@@ -170,7 +170,7 @@ end)
 
 
 local Window = Rayfield:CreateWindow({
-   Name = "C0huZz HUB 0.2.2 | Universal | Executor: "..identifyexecutor(),
+   Name = "C0huZz HUB 0.2.3 | Universal | Executor: "..identifyexecutor(),
    LoadingTitle = "Wait the HUB is loading",
    LoadingSubtitle = "by C0huZz",
    Theme = "Amethyst",
@@ -223,7 +223,9 @@ local ABOUTSection = ABOUTTab:CreateSection("Changelog")
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.1.8 | 19.02.25", Content = "Added Changelog; Added new TP locations; Added new brook skins; Added SCPRP script to Games Tab; Added DEX"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2 | 20.02.25", Content = "???"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.1 | 22.02.25", Content = "Added Slap Battle GUI; Added Scriptblox searcher; Added FE Black Hole; Added MM2 XHub; Added FakeChat; Added 3 new scripts; Temporarily removed FOV slider"})
-local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.2 | 10.03.25", Content = "Added division of HUB into games; Added back FOV slider; Flashback scripts fixed by roblox"})
+local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.2 | 10.03.25", Content = "Added back FOV slider; Flashback scripts fixed by roblox"})
+local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.2 | 15.07.25", Content = "Added FE Invisible script; Added Casual Stock script; I came back to the game after my account was deleted"})
+local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.3 | 24.07.25", Content = "To many scripts has fixed | Reuploaded new SCP script"})
 
 
 local MainTab = Window:CreateTab("Character", "person-standing")
@@ -363,19 +365,6 @@ local Toggle = FuncTab:CreateToggle({
 	end,
 })
 
-local Toggle = FuncTab:CreateToggle({
-	Name = "Infinite Jump",
-	CurrentValue = false,
-	Flag = "universal_infinite_jump",
-	Callback = function(state)
-		if state then
-			player.Character.Humanoid:ChangeState('Jumping')
-			wait(0.1)
-			player.Character.Humanoid:ChangeState('Seated')
-		end
-	end,
-})
-
 local AdminTab = Window:CreateTab("Admin Scripts and HUBs", "file-sliders")
 local AdminSection = AdminTab:CreateSection("Admin and OP Scripts")
 
@@ -431,13 +420,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/d
 
 local OtherTab = Window:CreateTab("Universal Scripts", "file-code-2")
 local OtherSection = OtherTab:CreateSection("Universal Scripts")
-
-local Button = OtherTab:CreateButton({
-   Name = "Walk On Walls (button Z)",
-   Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/zXk4Rq2r"))()
-   end,
-})
 
 local Button = OtherTab:CreateButton({
    Name = "R6 script",
@@ -534,6 +516,13 @@ local Button = OtherTab:CreateButton({
     end,
 })
 
+local Button = OtherTab:CreateButton({
+   Name = "FE Invisible (Button)",
+   Callback = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))()
+   end,
+})
+
 local Slider = OtherTab:CreateSlider({
    Name = "Stretched Resolution (Растяг экрана)",
    Range = {0.01, 1.00},
@@ -558,12 +547,6 @@ getgenv().gg_scripters = "Aori0001"
    end,
 })
 
-local Button = OtherTab:CreateButton({
-   Name = "Speed Animations Changer",
-   Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/dAnuL1X3"))()
-   end,
-})
 
 local Button = OtherTab:CreateButton({
    Name = "Telekinesis",
@@ -588,13 +571,6 @@ local Button = OtherTab:CreateButton({
    Name = "Delete Tool (Visual)",
    Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/Delete-Tool"))()
-   end,
-})
-
-local Button = OtherTab:CreateButton({
-   Name = "Fake Lag",
-   Callback = function()
-loadstring(game:HttpGet('https://pastebin.com/raw/VM3b0Thg'))()
    end,
 })
 
@@ -654,13 +630,6 @@ loadstring(game:HttpGet("https://pastebin.com/raw/s5rtS3DB"))()
    end,
 })
 
-local Button = OtherTab:CreateButton({
-   Name = "FE Tools Draw",
-   Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Affexter/Programs/refs/heads/main/scripts/tooldrawFE.lua"))()
-   end,
-})
-
 local GamesTab = Window:CreateTab("Games", "file-code-2")
 local GamesSection = GamesTab:CreateSection("Games Scripts")
 
@@ -679,13 +648,6 @@ loadstring(game:HttpGet'https://raw.githubusercontent.com/RunDTM/ZeeroxHub/main/
 })
 
 local Button = GamesTab:CreateButton({
-   Name = "Brookhaven Darkones GUI",
-   Callback = function()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/TheDarkoneMarcillisePex/Other-Scripts/main/Brook%20Haven%20Gui'))()
-   end,
-})
-
-local Button = GamesTab:CreateButton({
    Name = "Brookhaven SanderX",
    Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/sXPiterXs1111/Sanderx3.25/main/sanderxv3.25.lua"))()
@@ -695,14 +657,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/sXPiterXs1111/Sanderx
 local Button = GamesTab:CreateButton({
    Name = "SCPRP NullZen Script",
    Callback = function()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/axleoislost/NullZen/main/Scp-Roleplay'))()
-   end,
-})
-
-local Button = GamesTab:CreateButton({
-   Name = "Slap Battles ForgeHub",
-   Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Skzuppy/forge-hub/main/loader.lua"))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/axleoislost/Accent/refs/heads/main/Scp-Roleplay'))()
    end,
 })
 
@@ -714,13 +669,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/
 })
 
 local Button = GamesTab:CreateButton({
-   Name = "Fling Things and P. (Key - ElysiumFTAP)",
+   Name = "Casual Stock ESP (by Miha)",
    Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Oxwoey/ElysiumHub/main/oxwoey.lua", true))()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/C0huZz993/rbxcslstck/refs/heads/main/ready.lua")))()
    end,
 })
 
-local ChatTab = Window:CreateTab("Chat", "message-square-more")
+local ChatTab = Window:CreateTab("Chat", "message-circle-more")
 local ChatSection = ChatTab:CreateSection("Chat Scripts")
 
 local Button = ChatTab:CreateButton({
