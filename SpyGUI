@@ -5,6 +5,9 @@
 -- F2 - RETURN TO YOU
 -- F3 - TELEPORT TO PERSON
 
+--- CHAT TRACKER SCRIPT WAS TAKEN FROM xMurderer SCRIPTBLOX
+--- SPY GUI WAS MADED BY COHUZ (ME)
+
 repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
