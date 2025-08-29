@@ -1,0 +1,889 @@
+-- WHY YOU READING THIS?
+-- SHIFT+B - TOGGLE GUI
+-- SHIFT+R - RESET POSITION
+-- F1 - SPECTATE RANDOM
+-- F2 - RETURN TO YOU
+-- F3 - TELEPORT TO PERSON
+
+repeat task.wait() until game:IsLoaded()
+
+local Players = game:GetService("Players")
+local TextChatService = game:GetService("TextChatService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
+local LocalPlayer = Players.LocalPlayer
+
+getgenv().MAX_MESSAGES = MAX_MESSAGES or 350
+
+local connections = {}
+local currentSpectatedPlayer = nil
+
+local ChatMessages = {}
+local FilteredMessages = {}
+local shouldAutoScroll = true
+local colorCodingEnabled = true
+local highlightEnabled = false
+local displayedWrappers = {}
+
+local MIN_WIDTH = 350
+local MIN_HEIGHT = 200
+
+local function track(conn)
+    table.insert(connections, conn)
+    return conn 
+end
+
+local ChatLoggerGui = Instance.new("ScreenGui")
+ChatLoggerGui.Name = "CombinedGUI"
+ChatLoggerGui.ResetOnSpawn = false
+ChatLoggerGui.DisplayOrder = 100
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 350, 0, 330) 
+MainFrame.AnchorPoint = Vector2.new(0, 1)
+MainFrame.Position = UDim2.new(0, 0, 1, -10)
+MainFrame.BackgroundColor3 = Color3.fromRGB(34, 34, 36)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ChatLoggerGui
+
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0, 24)
+TitleBar.BackgroundColor3 = Color3.fromRGB(26, 26, 28)
+TitleBar.BorderSizePixel = 0
+TitleBar.Position = UDim2.new(0, 0, 0, 0)
+TitleBar.Parent = MainFrame
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Name = "TitleLabel"
+TitleLabel.Size = UDim2.new(1, -90, 1, 0)
+TitleLabel.AnchorPoint     = Vector2.new(0.5, 0.5)
+TitleLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+TitleLabel.TextXAlignment  = Enum.TextXAlignment.Center
+TitleLabel.TextYAlignment  = Enum.TextYAlignment.Center
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "Spy Menu"
+TitleLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+TitleLabel.TextSize = 14
+TitleLabel.Font = Enum.Font.SourceSansBold
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Center
+TitleLabel.Parent = TitleBar
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0, 24, 0, 24)
+CloseButton.Position = UDim2.new(1, -24, 0, 0)
+CloseButton.BackgroundTransparency = 1
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 17
+CloseButton.Font = Enum.Font.SourceSansBold
+CloseButton.Parent = TitleBar
+
+local HelpButton = Instance.new("TextButton")
+HelpButton.Name = "HelpButton"
+HelpButton.Size = UDim2.new(0, 24, 0, 24)
+HelpButton.Position = UDim2.new(1, -48, 0, 0)
+HelpButton.BackgroundTransparency = 1
+HelpButton.Text = "?"
+HelpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+HelpButton.TextSize = 17
+HelpButton.Font = Enum.Font.SourceSansBold
+HelpButton.Parent = TitleBar
+
+local TabBar = Instance.new("Frame")
+TabBar.Name = "TabBar"
+TabBar.Size = UDim2.new(1, 0, 0, 30)
+TabBar.Position = UDim2.new(0, 0, 0, 24)
+TabBar.BackgroundColor3 = Color3.fromRGB(26, 26, 28)
+TabBar.BorderSizePixel = 0
+TabBar.Parent = MainFrame
+
+local TabListLayout = Instance.new("UIListLayout")
+TabListLayout.FillDirection = Enum.FillDirection.Horizontal
+TabListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+TabListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+TabListLayout.Padding = UDim.new(0, 10)
+TabListLayout.Parent = TabBar
+
+local function createTabButton(name, text, order)
+    local button = Instance.new("TextButton")
+    button.Name = name .. "Button"
+    button.Size = UDim2.new(0, 120, 0, 24)
+    button.BackgroundColor3 = Color3.fromRGB(50, 50, 52)
+    button.BorderSizePixel = 0
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(240, 240, 240)
+    button.TextSize = 14
+    button.Font = Enum.Font.SourceSansBold
+    button.LayoutOrder = order
+    button.AutoButtonColor = true
+    button.Parent = TabBar
+    return button
+end
+
+local ChatTabButton = createTabButton("Chat", "Chat Tracker", 1)
+local SpectatorTabButton = createTabButton("Spectator", "Spectator", 2)
+
+-- ====================================================================================
+-- Resizing UI
+-- ====================================================================================
+
+local ResizeHandler = Instance.new("Frame")
+ResizeHandler.Name = "ResizeHandler"
+ResizeHandler.Size = UDim2.new(1, 0, 1, 0)
+ResizeHandler.BackgroundTransparency = 1
+ResizeHandler.Parent = MainFrame
+
+local resizers = {
+    {Name = "Top", Cursor = "SizeN", Size = UDim2.new(1,0,0,5), Pos = UDim2.new(0,0,0,0), Anchor = Vector2.new(0,1)},
+    {Name = "Bottom", Cursor = "SizeN", Size = UDim2.new(1,0,0,5), Pos = UDim2.new(0,0,1,0), Anchor = Vector2.new(0,0)},
+    {Name = "Left", Cursor = "SizeWE", Size = UDim2.new(0,5,1,0), Pos = UDim2.new(0,0,0,0), Anchor = Vector2.new(1,0)},
+    {Name = "Right", Cursor = "SizeWE", Size = UDim2.new(0,5,1,0), Pos = UDim2.new(1,0,0,0), Anchor = Vector2.new(0,0)},
+    {Name = "TopLeft", Cursor = "SizeNWSE", Size = UDim2.new(0,10,0,10), Pos = UDim2.new(0,0,0,0), Anchor = Vector2.new(1,1)},
+    {Name = "TopRight", Cursor = "SizeNESW", Size = UDim2.new(0,10,0,10), Pos = UDim2.new(1,0,0,0), Anchor = Vector2.new(0,1)},
+    {Name = "BottomLeft", Cursor = "SizeNESW", Size = UDim2.new(0,10,0,10), Pos = UDim2.new(0,0,1,0), Anchor = Vector2.new(1,0)},
+    {Name = "BottomRight", Cursor = "SizeNWSE", Size = UDim2.new(0,10,0,10), Pos = UDim2.new(1,0,1,0), Anchor = Vector2.new(0,0)},
+}
+
+for _, data in ipairs(resizers) do
+    local handle = Instance.new("Frame")
+    handle.Name = data.Name
+    handle.Size = data.Size
+    handle.AnchorPoint = data.Anchor
+    handle.Position = data.Pos
+    handle.BackgroundTransparency = 1
+    handle.Parent = ResizeHandler
+    
+    local dragging = false
+    local dragStart
+    local startSize
+    local startPos
+
+    track(handle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startSize = MainFrame.AbsoluteSize
+            startPos = MainFrame.AbsolutePosition
+            UserInputService.MouseIcon = "rbxasset://textures/Cursors/I_beam/I_beam_size" .. data.Cursor .. ".png"
+        end
+    end))
+
+    track(UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            local newSizeX = startSize.X
+            local newSizeY = startSize.Y
+            local newPosX = startPos.X
+            local newPosY = startPos.Y
+
+            if data.Name:find("Left") then
+                newSizeX = math.max(MIN_WIDTH, startSize.X - delta.X)
+                newPosX = startPos.X + (startSize.X - newSizeX)
+            elseif data.Name:find("Right") then
+                newSizeX = math.max(MIN_WIDTH, startSize.X + delta.X)
+            end
+
+            if data.Name:find("Top") then
+                newSizeY = math.max(MIN_HEIGHT, startSize.Y - delta.Y)
+                newPosY = startPos.Y + (startSize.Y - newSizeY)
+            elseif data.Name:find("Bottom") then
+                newSizeY = math.max(MIN_HEIGHT, startSize.Y + delta.Y)
+            end
+
+            MainFrame.Size = UDim2.new(0, newSizeX, 0, newSizeY)
+            MainFrame.Position = UDim2.new(0, newPosX, 0, newPosY)
+        end
+    end))
+
+    track(handle.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 and dragging then
+            dragging = false
+            UserInputService.MouseIcon = ""
+        end
+    end))
+end
+
+local ChatFrame = Instance.new("Frame")
+ChatFrame.Name = "ChatFrame"
+ChatFrame.Size = UDim2.new(1, 0, 1, -54)
+ChatFrame.Position = UDim2.new(0, 0, 0, 54)
+ChatFrame.BackgroundTransparency = 1
+ChatFrame.Parent = MainFrame
+
+local SearchBarFrame = Instance.new("Frame")
+SearchBarFrame.Name = "SearchBarFrame"
+SearchBarFrame.Size = UDim2.new(1, -10, 0, 24)
+SearchBarFrame.Position = UDim2.new(0, 5, 0, 0)
+SearchBarFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 52)
+SearchBarFrame.BorderSizePixel = 0
+SearchBarFrame.Parent = ChatFrame
+
+local SearchBar = Instance.new("TextBox")
+SearchBar.Name = "SearchBar"
+SearchBar.Size = UDim2.new(1, -10, 1, -4)
+SearchBar.Position = UDim2.new(0, 5, 0, 2)
+SearchBar.BackgroundTransparency = 1
+SearchBar.Text = ""
+SearchBar.PlaceholderText = "Search..."
+SearchBar.TextColor3 = Color3.fromRGB(240, 240, 240)
+SearchBar.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+SearchBar.Font = Enum.Font.SourceSans
+SearchBar.TextXAlignment = Enum.TextXAlignment.Left
+SearchBar.ClearTextOnFocus = false
+SearchBar.TextScaled = true
+SearchBar.Parent = SearchBarFrame
+
+local sizeConst = Instance.new("UITextSizeConstraint")
+sizeConst.Parent = SearchBar
+sizeConst.MaxTextSize = 14
+
+local ChatLogScrollFrame = Instance.new("ScrollingFrame")
+ChatLogScrollFrame.Name = "ChatLogScrollFrame"
+ChatLogScrollFrame.Size = UDim2.new(1, -10, 1, -90) 
+ChatLogScrollFrame.Position = UDim2.new(0, 5, 0, 28)
+ChatLogScrollFrame.BackgroundColor3 = Color3.fromRGB(34, 34, 36)
+ChatLogScrollFrame.BorderSizePixel = 0
+ChatLogScrollFrame.ScrollBarThickness = 8
+ChatLogScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+ChatLogScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+ChatLogScrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ChatLogScrollFrame.Parent = ChatFrame
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Name = "UIListLayout"
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 2)
+UIListLayout.Parent = ChatLogScrollFrame
+
+local ControlBar = Instance.new("Frame")
+ControlBar.Name = "ControlBar"
+ControlBar.Size = UDim2.new(1, 0, 0, 40) 
+ControlBar.Position = UDim2.new(0, 0, 1, -30) 
+ControlBar.BackgroundColor3 = Color3.fromRGB(26, 26, 28)
+ControlBar.BorderSizePixel = 0
+ControlBar.Parent = ChatFrame
+
+local ControlLayout = Instance.new("UIListLayout")
+ControlLayout.Name = "ControlLayout"
+ControlLayout.FillDirection = Enum.FillDirection.Horizontal
+ControlLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+ControlLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+ControlLayout.SortOrder = Enum.SortOrder.LayoutOrder
+ControlLayout.Padding = UDim.new(0, 10)
+ControlLayout.Parent = ControlBar
+
+local function createControlButton(name, text, order)
+    local button = Instance.new("TextButton")
+    button.Name = name
+    button.Size = UDim2.new(0, 70, 0, 24)
+    button.BackgroundColor3 = Color3.fromRGB(50, 50, 52)
+    button.BorderSizePixel = 0
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(240, 240, 240)
+    button.TextSize = 12
+    button.Font = Enum.Font.SourceSansBold
+    button.LayoutOrder = order
+    button.AutoButtonColor = true
+    button.Parent = ControlBar
+    return button
+end
+
+local ColorToggleButton = createControlButton("ColorToggleButton", "Colors: ON", 1)
+local HighlightButton = createControlButton("HighlightButton", "Highlight: OFF", 2)
+local CopyButton = createControlButton("CopyButton", "Copy Chat", 3)
+local ResetButton = createControlButton("ResetButton", "Reset Position", 4)
+
+local HelpPanel = Instance.new("Frame")
+HelpPanel.Name = "HelpPanel"
+HelpPanel.Size = UDim2.new(1, -10, 1, -64) 
+HelpPanel.Position = UDim2.new(0, 5, 0, 29)
+HelpPanel.BackgroundColor3 = Color3.fromRGB(40, 40, 42)
+HelpPanel.BorderSizePixel = 0
+HelpPanel.Visible = false
+HelpPanel.Parent = ChatFrame
+
+local HelpScrollFrame = Instance.new("ScrollingFrame")
+HelpScrollFrame.Name = "HelpScrollFrame"
+HelpScrollFrame.Size = UDim2.new(1, -10, 1, -10)
+HelpScrollFrame.Position = UDim2.new(0, 5, 0, 5)
+HelpScrollFrame.BackgroundTransparency = 1
+HelpScrollFrame.BorderSizePixel = 0
+HelpScrollFrame.ScrollBarThickness = 8
+HelpScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+HelpScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+HelpScrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+HelpScrollFrame.Parent = HelpPanel
+
+local HelpContentLayout = Instance.new("UIListLayout")
+HelpContentLayout.Name = "HelpContentLayout"
+HelpContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+HelpContentLayout.Padding = UDim.new(0, 10)
+HelpContentLayout.Parent = HelpScrollFrame
+
+
+local SpectatorFrame = Instance.new("Frame")
+SpectatorFrame.Name = "SpectatorFrame"
+SpectatorFrame.Size = UDim2.new(1, 0, 1, -54)
+SpectatorFrame.Position = UDim2.new(0, 0, 0, 54)
+SpectatorFrame.BackgroundTransparency = 1
+SpectatorFrame.Visible = false
+SpectatorFrame.Parent = MainFrame
+
+local ControlsSectionFrame = Instance.new("Frame")
+ControlsSectionFrame.Name = "ControlsSection"
+ControlsSectionFrame.Size = UDim2.new(1, 0, 0, 80)
+ControlsSectionFrame.Position = UDim2.new(0, 0, 0, 0)
+ControlsSectionFrame.BackgroundTransparency = 1
+ControlsSectionFrame.Parent = SpectatorFrame
+
+local ControlsLayout = Instance.new("UIListLayout")
+ControlsLayout.FillDirection = Enum.FillDirection.Horizontal
+ControlsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+ControlsLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+ControlsLayout.Padding = UDim.new(0, 10)
+ControlsLayout.Parent = ControlsSectionFrame
+
+local ReturnToSelfButton = createControlButton("ReturnToSelf", "Return to Self", 1)
+ReturnToSelfButton.Size = UDim2.new(0, 160, 0, 24)
+ReturnToSelfButton.Parent = ControlsSectionFrame
+
+local TeleportButton = createControlButton("TeleportToSpectated", "Teleport to Spectated", 2)
+TeleportButton.Size = UDim2.new(0, 160, 0, 24)
+TeleportButton.Parent = ControlsSectionFrame
+
+local PlayerListFrame = Instance.new("ScrollingFrame")
+PlayerListFrame.Name = "PlayerListFrame"
+PlayerListFrame.Size = UDim2.new(1, -10, 1, -90)
+PlayerListFrame.Position = UDim2.new(0, 5, 0, 85)
+PlayerListFrame.BackgroundColor3 = Color3.fromRGB(34, 34, 36)
+PlayerListFrame.BorderSizePixel = 0
+PlayerListFrame.ScrollBarThickness = 8
+PlayerListFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+PlayerListFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+PlayerListFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+PlayerListFrame.Parent = SpectatorFrame
+
+local PlayerListLayout = Instance.new("UIListLayout")
+PlayerListLayout.Name = "PlayerListLayout"
+PlayerListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+PlayerListLayout.Padding = UDim.new(0, 2)
+PlayerListLayout.Parent = PlayerListFrame
+
+local function spectatePlayer(playerName)
+    local targetPlayer = Players:FindFirstChild(playerName)
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+        workspace.CurrentCamera.CameraSubject = targetPlayer.Character:FindFirstChild("Humanoid")
+        currentSpectatedPlayer = targetPlayer
+        warn("Now spectating: " .. targetPlayer.DisplayName .. " (@" .. targetPlayer.Name .. ")")
+    else
+        warn("Error: Player " .. playerName .. " not found or no Humanoid.")
+    end
+end
+
+local function returnToSelf()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        workspace.CurrentCamera.CameraSubject = LocalPlayer.Character:FindFirstChild("Humanoid")
+        currentSpectatedPlayer = nil
+        warn("Returned to your character.")
+    end
+end
+
+local function teleportToSpectatedPlayer()
+    if currentSpectatedPlayer and currentSpectatedPlayer.Character then
+        local targetRootPart = currentSpectatedPlayer.Character:FindFirstChild("HumanoidRootPart")
+        local localRootPart = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if targetRootPart and localRootPart then
+            localRootPart.CFrame = targetRootPart.CFrame
+            warn("Teleported to " .. currentSpectatedPlayer.DisplayName .. " (@" .. currentSpectatedPlayer.Name .. ")")
+        else
+            warn("Error: Spectated player or your character doesn't have a HumanoidRootPart.")
+        end
+    else
+        warn("Error: You aren't spectating anyone.")
+    end
+end
+
+local function populatePlayerList()
+    for _, child in pairs(PlayerListFrame:GetChildren()) do
+        if child:IsA("TextButton") then
+            child:Destroy()
+        end
+    end
+    local players = Players:GetPlayers()
+    table.sort(players, function(a, b)
+        return a.Name:lower() < b.Name:lower()
+    end)
+    for _, player in pairs(players) do
+        if player ~= LocalPlayer then
+            local button = Instance.new("TextButton")
+            button.Name = "PlayerButton"
+            button.Size = UDim2.new(1, -10, 0, 24)
+            button.Position = UDim2.new(0, 5, 0, 0)
+            button.BackgroundTransparency = 1
+            button.Text = player.DisplayName .. " (@" .. player.Name .. ")"
+            button.TextColor3 = Color3.fromRGB(240, 240, 240)
+            button.TextSize = 14
+            button.Font = Enum.Font.SourceSans
+            button.TextXAlignment = Enum.TextXAlignment.Left
+            button.AutoButtonColor = true
+            button.Parent = PlayerListFrame
+            button.LayoutOrder = Players:GetPlayers()[player.Name] and Players:GetPlayers()[player.Name].LayoutOrder or 0
+            button.MouseButton1Click:Connect(function()
+                spectatePlayer(player.Name)
+            end)
+        end
+    end
+end
+
+local function getPlayerPosition(player)
+    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        return player.Character.HumanoidRootPart.Position
+    end
+    return nil
+end
+
+local function getAllPlayersPositions()
+    local positions = {}
+    for _, player in pairs(Players:GetPlayers()) do
+        local position = getPlayerPosition(player)
+        if position then
+            positions[player.Name:lower()] = {
+                position = position,
+                playerName = player.Name,
+                displayName = player.DisplayName
+            }
+            if player.DisplayName ~= player.Name then
+                positions[player.DisplayName:lower()] = {
+                    position = position,
+                    playerName = player.Name,
+                    displayName = player.DisplayName
+                }
+            end
+        end
+    end
+    return positions
+end
+
+local function createHelpSection(title, content, layoutOrder)
+    local section = Instance.new("Frame")
+    section.Name = "HelpSection_" .. title:gsub("%s+", "")
+    section.Size = UDim2.new(1, 0, 0, 0)
+    section.BackgroundTransparency = 1
+    section.LayoutOrder = layoutOrder
+    section.AutomaticSize = Enum.AutomaticSize.Y
+    section.Parent = HelpScrollFrame
+    local sectionTitle = Instance.new("TextLabel")
+    sectionTitle.Name = "Title"
+    sectionTitle.Size = UDim2.new(1, -16, 0, 24)
+    sectionTitle.Position = UDim2.new(0, 5, 0, 0)
+    sectionTitle.BackgroundTransparency = 1
+    sectionTitle.Text = title
+    sectionTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    sectionTitle.TextSize = 16
+    sectionTitle.Font = Enum.Font.SourceSansBold
+    sectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+    sectionTitle.Parent = section
+    local sectionContent = Instance.new("TextLabel")
+    sectionContent.Name = "Content"
+    sectionContent.Size = UDim2.new(1, -16, 0, 0)  
+    sectionContent.Position = UDim2.new(0, 5, 0, 24)  
+    sectionContent.BackgroundTransparency = 1
+    sectionContent.Text = content
+    sectionContent.TextColor3 = Color3.fromRGB(220, 220, 220)
+    sectionContent.TextSize = 14
+    sectionContent.Font = Enum.Font.SourceSans
+    sectionContent.TextXAlignment = Enum.TextXAlignment.Left
+    sectionContent.TextYAlignment = Enum.TextYAlignment.Top
+    sectionContent.TextWrapped = true
+    sectionContent.AutomaticSize = Enum.AutomaticSize.Y
+    sectionContent.Parent = section
+    return section
+end
+
+local function populateHelpContent()
+    for _, child in pairs(HelpScrollFrame:GetChildren()) do if child:IsA("Frame") then child:Destroy() end end
+	createHelpSection("Chat Tracker Helper", " ", 1)
+    createHelpSection("Basic Usage", "Press Shift+B to toggle the window\nPress Shift+R to reset menu position\nDrag the title bar to move the window\nDrag the borders to resize the window", 2)
+    createHelpSection("Search Filters", "You can use special filters in the search bar:\n• Type text to find messages containing that text\n• Use quotes for phrases: \"hello world\"\n• Team filter: %team (e.g., %red)\n• Player filter: ?name (e.g., ?bbutcher_0)\n• Word filter: *word (matches whole word only)\n• Proximity filter: ~distance (e.g., ~50)\n• Player proximity: player~distance (e.g., bbutcher_0~100)", 3)
+    createHelpSection("Search Operators", "Combine search terms with operators:\n• AND: requires both terms (e.g., hello AND world)\n• OR: matches either term (e.g., hello OR world)\n• NOT: excludes matches (e.g., hello AND NOT world)\n• Parentheses for grouping: (hello OR hi) AND world\nMultiple terms have an implicit OR between them\nSearches are case insensitive, except operators must be UPPERCASE", 4)
+    createHelpSection("Examples", "• Find messages from RedTeam: %red\n• Find messages from player starting with \"J\": ?j\n• Find \"hello\" but not \"world\": hello AND NOT world\n• Find messages about food from Team Red: %red AND (pizza OR burger)\n• Find messages from players within 100 studs of you: ~100\n• Find messages from players within 50 studs of bbutcher_0: bbutcher_0~50", 5)
+    createHelpSection("Proximity Filter", "The proximity filter shows messages from players who were within specified distance when they sent the message:\n• ~50: players within 50 studs of you\n• bbutcher_0~100: players within 100 studs of player \"bbutcher_0\"\n• Player names can be partial (e.g., \"j~50\" matches \"bbutcher_0\")\n• Uses positions at the time the message was sent, not current positions\n• If no matching player is found for player~distance, no results are shown", 6)
+    createHelpSection("Controls", "• Colors: Toggle team color indicators\n• Copy Chat: Copy filtered messages to clipboard\n• Highlight: Toggle highlighting of filtered messages", 7)
+	createHelpSection("Spectator Helper", " ", 8)
+	createHelpSection("Basic", "Press F1 to start spectating a random player\nPress F2 to return to your own character\nPress F3 to teleport to the player you are spectating\nSwitch to the Spectator tab in the menu to see a full list of players\nClick on any player's name in the list to begin watching them", 9)
+	createHelpSection("In-Menu Controls", "Return to Self: Same function as the F2 key, returning the camera to your character\nTeleport to Spectated: Same function as the F3 key, teleporting you to the player you're watching", 10)
+    HelpScrollFrame.CanvasSize = UDim2.new(0, 0, 0, HelpContentLayout.AbsoluteContentSize.Y + 10)
+end
+
+local function createChatMessageEntry(player, message, teamColor)
+    local timeStamp = os.date("%H:%M:%S")
+    local teamName = player.Team and player.Team.Name or "No Team"
+    local teamColorValue = teamColor or Color3.fromRGB(200, 200, 200)
+    local senderPosition = getPlayerPosition(player)
+    local localPlayerPosition = getPlayerPosition(LocalPlayer)
+    local allPlayerPositions = getAllPlayersPositions()
+    local entry = {
+        playerName           = player.Name,
+        displayName          = player.DisplayName,
+        message              = message,
+        teamName             = teamName,
+        teamColor            = teamColorValue,
+        timeStamp            = timeStamp,
+        layoutOrder          = #ChatMessages + 1,
+        tweened              = false,
+        senderPosition       = senderPosition,
+        localPlayerPosition  = localPlayerPosition,
+        allPlayerPositions   = allPlayerPositions,
+    }
+    table.insert(ChatMessages, entry)
+    return entry
+end
+
+local function createMessageElement(messageData)
+    local wrapper = Instance.new("Frame")
+    wrapper.Name = "MessageWrapper"
+    wrapper.Size = UDim2.new(1, 0, 0, 0)
+    wrapper.BackgroundTransparency = 1
+    wrapper.BorderSizePixel = 0
+    wrapper.LayoutOrder = messageData.layoutOrder
+    wrapper.AutomaticSize = Enum.AutomaticSize.Y
+    local inner = Instance.new("Frame")
+    inner.Name = "InnerFrame"
+    inner.Size = UDim2.new(1, 0, 0, 20)
+    inner.Position = UDim2.new(-1, 0, 0, 0)
+    inner.BackgroundTransparency = 1
+    inner.BorderSizePixel = 0
+    inner.AutomaticSize = Enum.AutomaticSize.Y
+    inner.Parent = wrapper
+    local TimeLabel = Instance.new("TextLabel")
+    TimeLabel.Name = "TimeLabel"
+    TimeLabel.Size = UDim2.new(0, 50, 1, 0)
+    TimeLabel.Position = UDim2.new(0, 4, 0, 0)
+    TimeLabel.BackgroundTransparency = 1
+    TimeLabel.Text = messageData.timeStamp
+    TimeLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+    TimeLabel.TextSize = 13
+    TimeLabel.Font = Enum.Font.SourceSans
+    TimeLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TimeLabel.Parent = inner
+    local TeamColorIndicator = Instance.new("Frame")
+    TeamColorIndicator.Name = "TeamColorIndicator"
+    TeamColorIndicator.Size = UDim2.new(0, 3, 1, -4)
+    TeamColorIndicator.Position = UDim2.new(0, 45, 0, 2)
+    TeamColorIndicator.BackgroundColor3 = messageData.teamColor
+    TeamColorIndicator.BorderSizePixel = 0
+    TeamColorIndicator.Visible = colorCodingEnabled
+    TeamColorIndicator.Parent = inner
+    local PlayerAndMessage = Instance.new("TextLabel")
+    PlayerAndMessage.Name = "PlayerAndMessage"
+    PlayerAndMessage.Size = UDim2.new(1, -80, 0, 0)
+    local xOffset = colorCodingEnabled and 53 or 45
+    PlayerAndMessage.Position = UDim2.new(0, xOffset, 0, 2)
+    PlayerAndMessage.BackgroundTransparency = 1
+    PlayerAndMessage.Text = string.format("[%s]: %s", messageData.playerName, messageData.message)
+    PlayerAndMessage.TextColor3 = Color3.fromRGB(240, 240, 240)
+    PlayerAndMessage.TextSize = 14
+    PlayerAndMessage.Font = Enum.Font.SourceSans
+    PlayerAndMessage.TextXAlignment = Enum.TextXAlignment.Left
+    PlayerAndMessage.TextWrapped = true
+    PlayerAndMessage.AutomaticSize = Enum.AutomaticSize.Y
+    PlayerAndMessage.Parent = inner
+    return wrapper
+end
+
+local function tokenize(str)
+    local tokens = {}
+    local i = 1
+    while i <= #str do
+        local c = str:sub(i,i)
+        if c:match("%s") then i = i + 1
+        elseif (c == "%" or c == "?" or c == "*" or c == "~") and (str:sub(i+1,i+1) == '"' or str:sub(i+1,i+1) == "'") then
+            local prefix = c; local quote = str:sub(i+1,i+1); local j = str:find(quote, i+2, true) or (#str + 1); local content= str:sub(i+2, j-1)
+            table.insert(tokens, { type = "term", value = prefix .. content }); i = j + 1
+        elseif c == '"' or c == "'" then
+            local quote = c; local j = str:find(quote, i+1, true) or (#str + 1); local content = str:sub(i+1, j-1)
+            table.insert(tokens, { type = "term", value = content }); i = j + 1
+        elseif str:sub(i,i+2) == "AND" and (i+3 > #str or str:sub(i+3,i+3):match("%s")) then
+            table.insert(tokens, { type = "op", value = "AND" }); i = i + 3
+        elseif str:sub(i,i+1) == "OR" and (i+2 > #str or str:sub(i+2,i+2):match("%s")) then
+            table.insert(tokens, { type = "op", value = "OR" }); i = i + 2
+        elseif str:sub(i,i+2) == "NOT" and (i+3 > #str or str:sub(i+3,i+3):match("%s")) then
+            table.insert(tokens, { type = "op", value = "NOT" }); i = i + 3
+        elseif c == "(" or c == ")" then
+            table.insert(tokens, { type = c }); i = i + 1
+        else
+            local j = str:find("[%s%(%)]", i) or (#str + 1); local term = str:sub(i, j-1)
+            table.insert(tokens, { type = "term", value = term }); i = j
+        end
+    end
+    local out = {}; for idx = 1, #tokens do table.insert(out, tokens[idx]); local cur, nxt = tokens[idx], tokens[idx+1]; if cur and nxt and (cur.type == "term" or cur.type == ")") and (nxt.type == "term" or nxt.type == "(") then table.insert(out, { type = "op", value = "OR" }) end end
+    return out
+end
+
+local function parseExpression(tokens)
+    local pos = 1
+    local function peek() return tokens[pos] end
+    local function consume(expected) local t = tokens[pos]; if not t or (expected and t.type ~= expected and t.value ~= expected) then error("Parse error, expected "..expected) end; pos = pos + 1; return t end
+    local function parsePrimary()
+        local t = peek(); if not t then error("Unexpected EOF") end
+        if t.type == "(" then consume("("); local node = parseExpr(); consume(")"); return node
+        elseif t.type == "term" then consume(); return { kind = "term", raw = t.value }
+        else error("Unexpected token in primary: "..t.type) end
+    end
+    local function parseFactor()
+        local negations = 0; while peek() and peek().type == "op" and peek().value == "NOT" do consume("op"); negations = negations + 1 end
+        local node = parsePrimary(); if negations % 2 == 1 then node = { kind = "not", child = node } end
+        return node
+    end
+    local function parseTermRule()
+        local node = parseFactor(); while peek() and peek().type == "op" and peek().value == "AND" do consume("op"); node = { kind = "and", left = node, right = parseFactor() } end
+        return node
+    end
+    function parseExpr()
+        local node = parseTermRule(); while peek() and peek().type == "op" and peek().value == "OR" do consume("op"); node = { kind = "or", left = node, right = parseTermRule() } end
+        return node
+    end
+    local tree = parseExpr(); if pos <= #tokens then error("Unexpected extra token: "..tokens[pos].value) end
+    return tree
+end
+
+local function matchTerm(msg, raw)
+    if raw:sub(1,1) == "\\" then raw = raw:sub(2); return msg.message:lower():find(raw:lower(),1,true) ~= nil end
+    local tildePos = raw:find("~"); if tildePos then
+        local playerPart = raw:sub(1, tildePos - 1); local distancePart = raw:sub(tildePos + 1); local distance = tonumber(distancePart)
+        if not distance then return false end
+        if playerPart == "" then
+            if not msg.senderPosition or not msg.localPlayerPosition then return false end; local actualDistance = (msg.senderPosition - msg.localPlayerPosition).Magnitude
+            return actualDistance <= distance
+        else
+            local targetPlayerData = nil; local searchTerm = playerPart:lower()
+            for playerKey, playerData in pairs(msg.allPlayerPositions) do if playerKey:match("^"..searchTerm) then targetPlayerData = playerData; break end end
+            if not targetPlayerData or not targetPlayerData.position or not msg.senderPosition then return false end
+            local actualDistance = (msg.senderPosition - targetPlayerData.position).Magnitude; return actualDistance <= distance
+        end
+    end
+    local pfx = raw:sub(1,1); local term = raw:sub(2):lower()
+    if pfx == "%" then return msg.teamName:lower():find(term,1,true)
+    elseif pfx == "?" then local pl = msg.playerName:lower(); local dn = msg.displayName:lower(); return pl:match("^"..term) or dn:match("^"..term)
+    elseif pfx == "*" then return msg.message:lower():find("%f[%w]"..term.."%f[%W]")
+    else term = raw:lower(); return msg.message:lower():find(term,1,true) end
+end
+
+local function eval(node, msg)
+    if node.kind == "term" then return matchTerm(msg, node.raw)
+    elseif node.kind == "not" then return not eval(node.child, msg)
+    elseif node.kind == "and" then return eval(node.left, msg) and eval(node.right, msg)
+    elseif node.kind == "or" then return eval(node.left, msg) or eval(node.right, msg)
+    else error("Unknown AST node: "..tostring(node.kind)) end
+end
+
+local function applyFilters(searchText)
+    if searchText:match("^%s*$") then
+        FilteredMessages = {}; for i = #ChatMessages, 1, -1 do local msg = ChatMessages[i]; table.insert(FilteredMessages, msg); if #FilteredMessages >= getgenv().MAX_MESSAGES then break end end
+        for i = 1, math.floor(#FilteredMessages / 2) do FilteredMessages[i], FilteredMessages[#FilteredMessages - i + 1] = FilteredMessages[#FilteredMessages - i + 1], FilteredMessages[i] end
+        return
+    end
+    local ok, tree = pcall(function() local toks = tokenize(searchText); return parseExpression(toks) end)
+    if not ok then FilteredMessages = {}; return end
+    FilteredMessages = {}; for i = #ChatMessages, 1, -1 do local msg = ChatMessages[i]; if eval(tree, msg) then table.insert(FilteredMessages, msg) end; if #FilteredMessages >= getgenv().MAX_MESSAGES then break end end 
+    for i = 1, math.floor(#FilteredMessages / 2) do FilteredMessages[i], FilteredMessages[#FilteredMessages - i + 1] = FilteredMessages[#FilteredMessages - i + 1], FilteredMessages[i] end
+end
+
+local function tail(list, n)
+    local len = #list; local start = math.max(1, len - n + 1); local out = {}; for i = start, len do out[#out + 1] = list[i] end
+    return out
+end
+
+local function updateMessageDisplay()
+    local baseList = highlightEnabled and tail(ChatMessages, getgenv().MAX_MESSAGES) or FilteredMessages
+    local passesFilter = {}; for _, msg in ipairs(baseList) do passesFilter[msg] = true end
+    for idx, msgData in ipairs(baseList) do
+        local wrapper = displayedWrappers[msgData]; if not wrapper then
+            wrapper = createMessageElement(msgData); wrapper.Parent = ChatLogScrollFrame; displayedWrappers[msgData] = wrapper
+            local inner = wrapper:FindFirstChild("InnerFrame"); if msgData == ChatMessages[#ChatMessages] then TweenService:Create(inner, TweenInfo.new(0.3, Enum.EasingStyle.Quad), { Position = UDim2.new(0, 0, 0, 0), }):Play()
+            else inner.Position = UDim2.new(0, 0, 0, 0) end
+        end
+        wrapper.LayoutOrder = idx; wrapper.Visible = true; local inner = wrapper:FindFirstChild("InnerFrame"); local indicator = inner:FindFirstChild("TeamColorIndicator")
+        if indicator then indicator.Visible = colorCodingEnabled end; local label = inner:FindFirstChild("PlayerAndMessage")
+        if label then local xOffset = colorCodingEnabled and 53 or 45; label.Position = UDim2.new(0, xOffset, 0, 2) end
+        if highlightEnabled and not SearchBar.Text:match("^%s*$") and table.find(FilteredMessages, msgData) then
+            inner.BackgroundTransparency = 0.8; inner.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
+        else inner.BackgroundTransparency = 1 end
+    end
+    for msgData, wrapper in pairs(displayedWrappers) do if not passesFilter[msgData] then wrapper:Destroy(); displayedWrappers[msgData] = nil end end
+    ChatLogScrollFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y)
+    if shouldAutoScroll then local y = math.max(0, UIListLayout.AbsoluteContentSize.Y - ChatLogScrollFrame.AbsoluteSize.Y); ChatLogScrollFrame.CanvasPosition = Vector2.new(0, y) end
+end
+
+local function toggleHelpPanel()
+    HelpPanel.Visible = not HelpPanel.Visible
+    ChatLogScrollFrame.Visible = not HelpPanel.Visible
+    SearchBarFrame.Visible = not HelpPanel.Visible
+    ControlBar.Visible = not HelpPanel.Visible
+    if HelpPanel.Visible then populateHelpContent() end
+end
+
+local function copyChatsToClipboard()
+    local textToCopy = ""; if colorCodingEnabled then
+        for _, msgData in ipairs(FilteredMessages) do textToCopy = textToCopy .. string.format("[%s] [%s] [%s]: %s\n", msgData.timeStamp, msgData.teamName, msgData.playerName, msgData.message) end
+    else 
+        for _, msgData in ipairs(FilteredMessages) do textToCopy = textToCopy .. string.format("[%s] [%s]: %s\n", msgData.timeStamp, msgData.playerName, msgData.message) end
+    end
+    if textToCopy == "" then textToCopy = "No messages to copy." end
+    pcall(function() setclipboard(textToCopy) end)
+end
+
+local function toggleHighlight()
+    highlightEnabled = not highlightEnabled
+    HighlightButton.Text = "Highlight: " .. (highlightEnabled and "ON" or "OFF")
+    updateMessageDisplay()
+end
+
+local function toggleColorCoding()
+    colorCodingEnabled = not colorCodingEnabled
+    ColorToggleButton.Text = "Colors: " .. (colorCodingEnabled and "ON" or "OFF")
+    for _, wrapper in pairs(displayedWrappers) do
+        local inner = wrapper:FindFirstChild("InnerFrame")
+        local teamIndicator = inner and inner:FindFirstChild("TeamColorIndicator")
+        if teamIndicator then teamIndicator.Visible = colorCodingEnabled end
+        local label = inner and inner:FindFirstChild("PlayerAndMessage")
+        if label then local xOffset = colorCodingEnabled and 53 or 45; label.Position = UDim2.new(0, xOffset, 0, 2) end
+    end
+end
+
+
+local function switchTab(tabName)
+    if tabName == "Chat" then
+        ChatFrame.Visible = true
+        SpectatorFrame.Visible = false
+        ChatTabButton.BackgroundColor3 = Color3.fromRGB(80, 80, 82)
+        SpectatorTabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 52)
+        toggleHelpPanel() -- To close help if open
+        toggleHelpPanel()
+    elseif tabName == "Spectator" then
+        ChatFrame.Visible = false
+        SpectatorFrame.Visible = true
+        ChatTabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 52)
+        SpectatorTabButton.BackgroundColor3 = Color3.fromRGB(80, 80, 82)
+        populatePlayerList()
+    end
+end
+
+local function init()
+    track(TextChatService.MessageReceived:Connect(function(textChatMessage)
+        local player = Players:GetPlayerByUserId(textChatMessage.TextSource.UserId)
+        if player then
+            local teamColor = player.Team and player.Team.TeamColor.Color or Color3.fromRGB(200, 200, 200)
+            createChatMessageEntry(player, textChatMessage.Text, teamColor)
+            applyFilters(SearchBar.Text)
+            updateMessageDisplay()
+        end
+    end))
+
+    track(SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
+        applyFilters(SearchBar.Text)
+        updateMessageDisplay()
+    end))
+
+    track(ChatLogScrollFrame.Changed:Connect(function(property)
+        if property == "CanvasPosition" then
+            local scrollPos = ChatLogScrollFrame.CanvasPosition.Y
+            local canvasSize = ChatLogScrollFrame.CanvasSize.Y.Offset
+            local frameSize = ChatLogScrollFrame.AbsoluteSize.Y
+            if canvasSize <= frameSize or (canvasSize - (scrollPos + frameSize)) < 20 then
+                shouldAutoScroll = true
+            else
+                shouldAutoScroll = false
+            end
+        end
+    end))
+
+    local dragging = false
+    local dragStart
+    local startPos
+
+    track(TitleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = MainFrame.Position
+        end
+    end))
+
+    track(UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            MainFrame.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end))
+
+    track(UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 and dragging then
+            dragging = false
+        end
+    end))
+
+    track(UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.KeyCode == Enum.KeyCode.B and UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+            ChatLoggerGui.Enabled = not ChatLoggerGui.Enabled
+		elseif input.KeyCode == Enum.KeyCode.R and UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+			MainFrame.Position = UDim2.new(0, 0, 1, -10)
+			warn("Menu position reset to default.")
+        elseif input.KeyCode == Enum.KeyCode.F1 then
+            local players = Players:GetPlayers()
+            if #players > 1 then
+                local randomPlayer = players[math.random(1, #players)]
+                if randomPlayer == LocalPlayer then
+                    if #players > 2 then
+                        local filteredPlayers = {}
+                        for _, p in pairs(players) do
+                            if p ~= LocalPlayer then
+                                table.insert(filteredPlayers, p)
+                            end
+                        end
+                        randomPlayer = filteredPlayers[math.random(1, #filteredPlayers)]
+                    else
+                        return
+                    end
+                end
+                spectatePlayer(randomPlayer.Name)
+            end
+        elseif input.KeyCode == Enum.KeyCode.F2 then
+            returnToSelf()
+        elseif input.KeyCode == Enum.KeyCode.F3 then
+            teleportToSpectatedPlayer()
+        end
+    end))
+    
+    track(Players.PlayerAdded:Connect(populatePlayerList))
+    track(Players.PlayerRemoving:Connect(populatePlayerList))
+    track(ChatTabButton.MouseButton1Click:Connect(function() switchTab("Chat") end))
+    track(SpectatorTabButton.MouseButton1Click:Connect(function() switchTab("Spectator") end))
+    track(ReturnToSelfButton.MouseButton1Click:Connect(returnToSelf))
+    track(TeleportButton.MouseButton1Click:Connect(teleportToSpectatedPlayer))
+
+    track(ColorToggleButton.MouseButton1Click:Connect(toggleColorCoding))
+    track(HighlightButton.MouseButton1Click:Connect(toggleHighlight))
+    track(CopyButton.MouseButton1Click:Connect(copyChatsToClipboard))
+	track(ResetButton.MouseButton1Click:Connect(function()
+	MainFrame.Position = UDim2.new(0, 0, 1, -10)
+end))
+    track(CloseButton.MouseButton1Click:Connect(function() ChatLoggerGui:Destroy() end))
+    track(HelpButton.MouseButton1Click:Connect(toggleHelpPanel))
+
+    ChatLoggerGui.Parent = gethui and gethui() or CoreGui
+    switchTab("Chat")
+end
+
+init()
