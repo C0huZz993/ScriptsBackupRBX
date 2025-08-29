@@ -170,7 +170,7 @@ end)
 
 
 local Window = Rayfield:CreateWindow({
-   Name = "C0huZz HUB 0.2.3 | Universal | Executor: "..identifyexecutor(),
+   Name = "C0huZz HUB 0.2.4 | Universal | Executor: "..identifyexecutor(),
    LoadingTitle = "Wait the HUB is loading",
    LoadingSubtitle = "by C0huZz",
    Theme = "Amethyst",
@@ -226,7 +226,7 @@ local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.1 | 22.02.25", Content 
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.2 | 10.03.25", Content = "Added back FOV slider; Flashback scripts fixed by roblox"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.2 | 15.07.25", Content = "Added FE Invisible script; Added Casual Stock script; I came back to the game after my account was deleted"})
 local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.3 | 24.07.25", Content = "To many scripts has fixed | Reuploaded new SCP script"})
-
+local Paragraph = ABOUTTab:CreateParagraph({Title = "0.2.4 | 29.08.25", Content = "Deleted fixed scripts | rework new spy gui | add fakefriend and spy gui scripts"})
 
 local MainTab = Window:CreateTab("Character", "person-standing")
 local MainSection = MainTab:CreateSection("Character")
@@ -485,36 +485,12 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBack
 })
 
 local Button = OtherTab:CreateButton({
-   Name = "Universal Silent Aim - U.S.A",
+   Name = "Spy GUI (Chat Tracker & Spectate)",
    Callback = function()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Bac0nHck/Scripts/refs/heads/main/UniversalSilentAim'))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/SpyGUI'))()
    end,
 })
 
-local Button = OtherTab:CreateButton({
-   Name = "Spectate GUI (By C0huZz)",
-   Callback = function()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/SpectateGUI'))()
-   end,
-})
-
-local Button = OtherTab:CreateButton({
-   Name = "FPS Booster",
-   Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/gvUFpwQw"))()
-   end,
-})
-
-local Button = OtherTab:CreateButton({
-   Name = "Flashback (E)",
-    Callback = function()
-        Rayfield:Notify({
-            Title = "Error! Script has fixed",
-            Content = "Roblox Fixed Flashback Scripts :(",
-            Duration = 4, -- Duration in seconds
-        })
-    end,
-})
 
 local Button = OtherTab:CreateButton({
    Name = "FE Invisible (Button)",
@@ -555,18 +531,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBack
    end,
 })
 
-local Toggle = OtherTab:CreateToggle({
-	Name = "Anti-AFK",
-	CurrentValue = false,
-	Flag = "universal_antiafk",
-	Callback=function(state)
-		for i,v in pairs(getconnections(player.Idled)) do
-			if state then v:Disable() end
-			if not state then v:Enable() end
-		end
-	end,
-})
-
 local Button = OtherTab:CreateButton({
    Name = "Delete Tool (Visual)",
    Callback = function()
@@ -603,13 +567,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/chillz-wor
 })
 
 local Button = OtherTab:CreateButton({
-   Name = "FE Black Hole (Bring Parts)",
-   Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Bac0nHck/Scripts/main/BringFlingPlayers"))()
-   end,
-})
-
-local Button = OtherTab:CreateButton({
    Name = "Fake Chat (Nameless Admin Func.)",
    Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/FakeChat"))()
@@ -624,9 +581,9 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hassanxzayn-lua/NEOXH
 })
 
 local Button = OtherTab:CreateButton({
-   Name = "Chat Draw",
+   Name = "Fake Friend",
    Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/s5rtS3DB"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/C0huZz993/ScriptsBackupRBX/refs/heads/main/FakeFriend"))()
    end,
 })
 
@@ -658,20 +615,6 @@ local Button = GamesTab:CreateButton({
    Name = "SCPRP NullZen Script",
    Callback = function()
 loadstring(game:HttpGet('https://raw.githubusercontent.com/axleoislost/Accent/refs/heads/main/Scp-Roleplay'))()
-   end,
-})
-
-local Button = GamesTab:CreateButton({
-   Name = "MM2 XHub",
-   Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Au0yX/Community/main/XhubMM2"))()
-   end,
-})
-
-local Button = GamesTab:CreateButton({
-   Name = "Casual Stock ESP (by Miha)",
-   Callback = function()
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/C0huZz993/rbxcslstck/refs/heads/main/ready.lua")))()
    end,
 })
 
